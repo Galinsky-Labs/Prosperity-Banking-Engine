@@ -30,3 +30,5 @@ export * from './bank-adapter.mjs';
 
 export * from './evidence-vault.mjs';
 export * from './audit-sink.mjs';
+export * from './banking-home.mjs';
+
