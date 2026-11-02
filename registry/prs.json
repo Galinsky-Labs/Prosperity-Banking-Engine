@@ -134,7 +134,9 @@
       "id": "BNK-010",
       "title": "Observability and audit sink",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        12
+      ],
       "dependsOn": [
         "BNK-009"
       ],
@@ -699,6 +701,17 @@
       "draft": false,
       "id": 5015898959,
       "url": "https://github.com/neophilism/Prosperity-Banking-Engine/pull/11"
+    },
+    {
+      "number": 12,
+      "title": "BNK-010: Add tenant observability and audit sink",
+      "state": "open",
+      "createdAt": "2026-10-28T07:18:13Z",
+      "updatedAt": "2026-10-28T07:18:13Z",
+      "mergedAt": null,
+      "closedAt": null,
+      "draft": true,
+      "url": "https://github.com/neophilism/Prosperity-Banking-Engine/pull/12"
     }
   ]
 }
