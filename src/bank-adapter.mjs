@@ -35,8 +35,9 @@ export class FakeBankLedger {
    ensure(/^tenant_[a-z0-9_-]+$/.test(tenantId),'INVALID_ACCOUNT','Valid tenant is required');
    ensure(contract.currencies.includes(currency),'INVALID_ACCOUNT','Account currency is unsupported');
    ensure(Number.isSafeInteger(candidate.balanceMinor),'INVALID_ACCOUNT','Balance must use safe integer minor units');
+   const balanceAsOf=candidate.balanceAsOf??null;ensure(balanceAsOf===null||(Number.isSafeInteger(balanceAsOf)&&balanceAsOf>=0),'INVALID_ACCOUNT','Balance observation time must be a nonnegative integer');
    const key=`${tenantId}:${accountId}`;ensure(!this.#accounts.has(key),'INVALID_ACCOUNT','Synthetic account IDs must be tenant-unique');
-   this.#accounts.set(key,Object.freeze({tenantId,accountId,currency,balanceMinor:candidate.balanceMinor,version:0,syntheticOnly:true}));this.#entries.set(key,[]);
+   this.#accounts.set(key,Object.freeze({tenantId,accountId,currency,balanceMinor:candidate.balanceMinor,balanceAsOf,version:0,syntheticOnly:true}));this.#entries.set(key,[]);
   }
  }
 
@@ -67,7 +68,7 @@ export class FakeBankLedger {
   const delta=direction==='credit'?amountMinor:-amountMinor,nextBalance=account.balanceMinor+delta;
   ensure(Number.isSafeInteger(nextBalance),'AMOUNT_OVERFLOW','Synthetic balance exceeds safe integer bounds');ensure(nextBalance>=0,'INSUFFICIENT_FUNDS','Synthetic account cannot be overdrawn');
   const entry=freezeEntry({entryKey,entryId,tenantId:identity.tenantId,accountId,direction,amountMinor,currency,descriptionCode,postedAt:now,actor:Object.freeze({issuer:identity.issuer,subject:identity.subject}),syntheticOnly:true});
-  const updated=Object.freeze({...account,balanceMinor:nextBalance,version:account.version+1});
+  const updated=Object.freeze({...account,balanceMinor:nextBalance,balanceAsOf:now,version:account.version+1});
   const result=Object.freeze({account:updated,entry,adapterId:this.#contract.adapterId,adapterVersion:this.#contract.version,syntheticOnly:true});
   this.#accounts.set(accountKey,updated);this.#entries.get(accountKey).push(entry);this.#entryIds.add(entryKey);this.#requests.set(requestKey,{digest,result});return result;
  }
@@ -76,3 +77,4 @@ export class FakeBankLedger {
   this.#authorize(identity,this.#contract.actions.read,{assignments,consentLedger,consentId,now});const [key]=this.#account(identity,accountId);return Object.freeze([...this.#entries.get(key)]);
  }
 }
+
