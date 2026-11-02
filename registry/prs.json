@@ -4,7 +4,7 @@
   "roadmapVersion": 1,
   "planVerified": true,
   "plannedPrCount": 47,
-  "observedAt": "2026-11-02T00:57:00Z",
+  "observedAt": "2026-11-02T01:00:12Z",
   "units": [
     {
       "id": "BNK-001",
@@ -148,7 +148,9 @@
       "id": "BNK-011",
       "title": "Banking home and balance freshness",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        13
+      ],
       "dependsOn": [
         "BNK-010"
       ],
@@ -712,6 +714,17 @@
       "closedAt": "2026-11-02T00:56:15Z",
       "draft": false,
       "url": "https://github.com/neophilism/Prosperity-Banking-Engine/pull/12"
+    },
+    {
+      "number": 13,
+      "title": "BNK-011: Add banking home balance freshness",
+      "state": "open",
+      "createdAt": "2026-11-02T01:00:12Z",
+      "updatedAt": "2026-11-02T01:00:12Z",
+      "mergedAt": null,
+      "closedAt": null,
+      "draft": true,
+      "url": "https://github.com/neophilism/Prosperity-Banking-Engine/pull/13"
     }
   ]
 }
