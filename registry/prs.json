@@ -4,7 +4,7 @@
   "roadmapVersion": 1,
   "planVerified": true,
   "plannedPrCount": 47,
-  "observedAt": "2026-11-02T01:02:00Z",
+  "observedAt": "2026-11-02T01:03:32Z",
   "units": [
     {
       "id": "BNK-001",
@@ -162,7 +162,9 @@
       "id": "BNK-012",
       "title": "Transaction normalization",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        14
+      ],
       "dependsOn": [
         "BNK-011"
       ],
@@ -725,6 +727,17 @@
       "closedAt": "2026-11-02T01:01:16Z",
       "draft": false,
       "url": "https://github.com/neophilism/Prosperity-Banking-Engine/pull/13"
+    },
+    {
+      "number": 14,
+      "title": "BNK-012: Add transaction normalization",
+      "state": "open",
+      "createdAt": "2026-11-02T01:03:32Z",
+      "updatedAt": "2026-11-02T01:03:32Z",
+      "mergedAt": null,
+      "closedAt": null,
+      "draft": true,
+      "url": "https://github.com/neophilism/Prosperity-Banking-Engine/pull/14"
     }
   ]
 }
