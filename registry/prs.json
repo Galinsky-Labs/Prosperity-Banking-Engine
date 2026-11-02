@@ -4,7 +4,7 @@
   "roadmapVersion": 1,
   "planVerified": true,
   "plannedPrCount": 47,
-  "observedAt": "2026-10-26T10:36:30Z",
+  "observedAt": "2026-11-02T00:57:00Z",
   "units": [
     {
       "id": "BNK-001",
@@ -705,12 +705,12 @@
     {
       "number": 12,
       "title": "BNK-010: Add tenant observability and audit sink",
-      "state": "open",
+      "state": "closed",
       "createdAt": "2026-10-28T07:18:13Z",
-      "updatedAt": "2026-10-28T07:18:13Z",
-      "mergedAt": null,
-      "closedAt": null,
-      "draft": true,
+      "updatedAt": "2026-11-02T00:56:15Z",
+      "mergedAt": "2026-11-02T00:56:15Z",
+      "closedAt": "2026-11-02T00:56:15Z",
+      "draft": false,
       "url": "https://github.com/neophilism/Prosperity-Banking-Engine/pull/12"
     }
   ]
