@@ -73,8 +73,8 @@ export class FakeBankLedger {
   this.#accounts.set(accountKey,updated);this.#entries.get(accountKey).push(entry);this.#entryIds.add(entryKey);this.#requests.set(requestKey,{digest,result});return result;
  }
 
- listEntries({identity,accountId,assignments,consentLedger=null,consentId=null,now=Date.now()}){
-  this.#authorize(identity,this.#contract.actions.read,{assignments,consentLedger,consentId,now});const [key]=this.#account(identity,accountId);return Object.freeze([...this.#entries.get(key)]);
+ listEntries({identity,accountId,assignments,consentLedger=null,consentId=null,limit=1000,now=Date.now()}){
+  this.#authorize(identity,this.#contract.actions.read,{assignments,consentLedger,consentId,now});ensure(Number.isInteger(limit)&&limit>=1&&limit<=1000,'INVALID_ENTRY_QUERY','Entry limit is invalid');const [key]=this.#account(identity,accountId);return Object.freeze(this.#entries.get(key).slice(0,limit));
  }
 }
 
