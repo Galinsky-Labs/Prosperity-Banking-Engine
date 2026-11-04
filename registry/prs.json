@@ -4,7 +4,7 @@
   "roadmapVersion": 1,
   "planVerified": true,
   "plannedPrCount": 47,
-  "observedAt": "2026-11-02T01:05:00Z",
+  "observedAt": "2026-11-04T20:14:05Z",
   "units": [
     {
       "id": "BNK-001",
@@ -176,7 +176,9 @@
       "id": "BNK-013",
       "title": "Cash-flow forecasting",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        15
+      ],
       "dependsOn": [
         "BNK-012"
       ],
@@ -738,6 +740,17 @@
       "closedAt": "2026-11-02T01:04:27Z",
       "draft": false,
       "url": "https://github.com/neophilism/Prosperity-Banking-Engine/pull/14"
+    },
+    {
+      "number": 15,
+      "title": "BNK-013: Add bounded cash-flow forecasting",
+      "state": "open",
+      "createdAt": "2026-11-04T20:14:05Z",
+      "updatedAt": "2026-11-04T20:14:05Z",
+      "mergedAt": null,
+      "closedAt": null,
+      "draft": true,
+      "url": "https://github.com/neophilism/Prosperity-Banking-Engine/pull/15"
     }
   ]
 }
