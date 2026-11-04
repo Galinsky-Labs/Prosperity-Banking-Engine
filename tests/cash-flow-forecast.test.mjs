@@ -6,7 +6,7 @@ import {createBankAdapterContract,FakeBankLedger} from '../src/bank-adapter.mjs'
 import {createTransactionNormalizerContract,TransactionNormalizer} from '../src/transaction-normalizer.mjs';
 import {CashFlowForecastService,createCashFlowForecastContract} from '../src/cash-flow-forecast.mjs';
 
-const DAY=86_400_000,now=20_000_000;
+const DAY=86_400_000,now=200*DAY;
 const identityFor=async(tenantId='tenant_alpha',subject='customer-3')=>authenticateIdentity({credential:'valid',now},async()=>({verified:true,tenantId,issuer:'https://identity.example',subject,authenticatedAt:now-10_000,expiresAt:now+10*DAY,authenticationMethods:['passkey']}));
 const rolePolicy=createRolePolicy([{name:'customer',permissions:['bank:read','bank:post','transactions:read','cashflow:forecast']}]);
 const policy=createGatewayPolicy({version:'forecast-policy-v1',rules:[{action:'bank.accounts.read',permission:'bank:read'},{action:'bank.entries.post',permission:'bank:post'},{action:'bank.transactions.read',permission:'transactions:read'},{action:'bank.cashflow.forecast',permission:'cashflow:forecast'}]});
