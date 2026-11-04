@@ -46,7 +46,7 @@ test('bounds the horizon and rejects ambiguous scheduled evidence',async()=>{
 
 test('fails closed on arithmetic overflow',async()=>{
  const identity=await identityFor(),{bank,service}=setup();
- post(bank,identity,{requestId:'large-request',entryId:'large',direction:'credit',amountMinor:Number.MAX_SAFE_INTEGER,expectedVersion:0,postedAt:now-1});
+ post(bank,identity,{requestId:'large-request',entryId:'large',direction:'credit',amountMinor:Number.MAX_SAFE_INTEGER-10_000,expectedVersion:0,postedAt:now-1});
  assert.throws(()=>service.forecast({identity,accountId:'checking',currency:'USD',assignments:[assignmentFor()],lookbackDays:1,horizonDays:2,now}),/safe integer/);
 });
 
