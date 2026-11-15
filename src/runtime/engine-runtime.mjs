@@ -10,7 +10,7 @@ import {CashFlowForecastService,createCashFlowForecastContract} from '../cash-fl
 import {DurableEventOutbox,DurableEvidenceVault,DurableLedger} from './durable-services.mjs';
 import {ensure,requireDecision} from './guards.mjs';
 import {CommandJournal} from './command-journal.mjs';
-import {createModuleOperations} from './module-operations.mjs';
+import {MODULE_GATEWAY_RULES,createModuleOperations} from './module-operations.mjs';
 import {SYNTHETIC_ROLES,createSyntheticDirectory,syntheticLedgerSeed} from '../synthetic/directory.mjs';
 import {createSyntheticSessionIssuer} from '../synthetic/session-tokens.mjs';
 import {BankerChatService,buildGroundingFacts,createBankerChatContract,createSimulatedResponder} from '../chat/banker-chat.mjs';
@@ -43,7 +43,7 @@ export async function createEngineRuntime({store,sessionSecret,dataMode='synthet
  const directory=createSyntheticDirectory();
  const issuer=createSyntheticSessionIssuer({secret:sessionSecret,directory,ttlMs:sessionTtlMs});
  const rolePolicy=createRolePolicy(SYNTHETIC_ROLES.map(role=>({...role,permissions:[...role.permissions]})));
- const gateway=new PolicyGateway({policy:createGatewayPolicy({version:'engine-api-v1',rules:GATEWAY_RULES.map(rule=>({...rule}))}),rolePolicy});
+ const gateway=new PolicyGateway({policy:createGatewayPolicy({version:'engine-api-v1',rules:[...GATEWAY_RULES,...MODULE_GATEWAY_RULES].map(rule=>({...rule}))}),rolePolicy});
  const adapterContract=createBankAdapterContract({adapterId:'synthetic-ledger',version:'v1',currencies:['USD'],actions:{read:'bank.accounts.read',post:'bank.entries.post'}});
  const homeContract=createBankingHomeContract({version:'home-v1',action:'bank.home.read',maxBalanceAgeMs:86_400_000,maxAccounts:20});
  const normalizerContract=createTransactionNormalizerContract({version:'normalizer-v1',action:'bank.transactions.read',maxTransactions:500});
@@ -56,7 +56,8 @@ export async function createEngineRuntime({store,sessionSecret,dataMode='synthet
  const chat=new BankerChatService({contract:createBankerChatContract({version:'banker-chat-v1',action:'chat.ask'}),gateway,provider:chatProvider});
  await store.seed(syntheticLedgerSeed({adapterId:adapterContract.adapterId,seedAt}));
 
- const {operations}=createModuleOperations({gateway});
+ const services={};
+ const {operations,modules}=createModuleOperations({gateway,services});
  const contextFor=(identity,now)=>Object.freeze({identity,now,assignments:directory.assignmentsFor(identity)});
  const journal=new CommandJournal({store,operations,contextFor,onFatal});
  await journal.replay();
@@ -64,6 +65,12 @@ export async function createEngineRuntime({store,sessionSecret,dataMode='synthet
  /** Customers see only accounts they hold (owner or joint); staff roles are tenant-scoped by the policy gateway. */
  const heldAccounts=async identity=>directory.assignmentsFor(identity).some(assignment=>assignment.role==='customer')?store.accountsHeldBy({tenantId:identity.tenantId,issuer:identity.issuer,subject:identity.subject}):null;
  const requireHeld=async(identity,accountIds)=>{const held=await heldAccounts(identity);if(held!==null)for(const accountId of accountIds)ensure(held.includes(accountId),'ACCOUNT_NOT_FOUND','Synthetic account does not exist');return held;};
+
+ Object.assign(services,{
+  heldAccounts,
+  readAccount:async(identity,{accountId})=>{await requireHeld(identity,[accountId]);return ledger.readAccount({identity,accountId,assignments:directory.assignmentsFor(identity),now:clock()});},
+  transactions:async(identity,{accountId,limit})=>{await requireHeld(identity,[accountId]);const now=clock();return (await readServices(identity,[accountId],now)).normalizer.list({identity,accountId,limit,assignments:directory.assignmentsFor(identity),now});}
+ });
 
  const readServices=async(identity,accountIds,now)=>{
   const adapter=await ledger.snapshot({identity,accountIds,now});
@@ -93,6 +100,8 @@ export async function createEngineRuntime({store,sessionSecret,dataMode='synthet
   getEvidence:(identity,{evidenceId})=>vault.get({identity,evidenceId,assignments:directory.assignmentsFor(identity),now:clock()}),
   listEvidence:(identity,{limit})=>vault.list({identity,limit,assignments:directory.assignmentsFor(identity),now:clock()}),
   execute:(op,identity,body)=>journal.execute(op,identity,body,clock()),
+  operationNames:Object.keys(operations).sort(),
+  modules,
   journalStatus:()=>journal.status,
   appendAudit:(identity,record)=>journal.execute('audit.append',identity,record,clock()),
   listAudit:async(identity,query)=>(await journal.execute('audit.list',identity,query,clock())).records,

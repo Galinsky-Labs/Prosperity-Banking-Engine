@@ -75,6 +75,8 @@ export class ProjectWorkspace {
   return this.#save(project,expectedVersion,{milestones:Object.freeze(project.milestones.map(candidate=>candidate.milestoneId===milestoneId?updated:candidate))});
  }
 
+ /** Internal lookup for system components (tool router, verification): founder of a project, or null. */
+ founderOf({tenantId,projectId}){return this.#projects.get(`${tenantId}:${projectId}`)?.founderId??null;}
  get({identity,projectId,assignments,now}){this.#auth(identity,assignments,now);return this.#project(identity,projectId,'read');}
  list({identity,assignments,now}){this.#auth(identity,assignments,now);return Object.freeze([...this.#projects.values()].filter(project=>project.tenantId===identity.tenantId&&project.members.some(member=>member.issuer===identity.issuer&&member.subject===identity.subject)));}
 }

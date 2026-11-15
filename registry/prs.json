@@ -4,7 +4,7 @@
   "roadmapVersion": 1,
   "planVerified": true,
   "plannedPrCount": 47,
-  "observedAt": "2026-11-15T19:30:32Z",
+  "observedAt": "2026-11-15T19:37:15Z",
   "units": [
     {
       "id": "BNK-001",
@@ -213,7 +213,8 @@
       "title": "Agent scheduling and budgets",
       "origin": "original",
       "prs": [
-        19
+        19,
+        34
       ],
       "dependsOn": [
         "BNK-014"
@@ -227,7 +228,8 @@
       "title": "Hardship assistance workflows",
       "origin": "original",
       "prs": [
-        20
+        20,
+        34
       ],
       "dependsOn": [
         "BNK-015"
@@ -241,7 +243,8 @@
       "title": "Overdraft opt-in interface",
       "origin": "original",
       "prs": [
-        21
+        21,
+        34
       ],
       "dependsOn": [
         "BNK-016"
@@ -255,7 +258,8 @@
       "title": "Rail-specific overdraft policy",
       "origin": "original",
       "prs": [
-        21
+        21,
+        34
       ],
       "dependsOn": [
         "BNK-017"
@@ -269,7 +273,8 @@
       "title": "Bound step-up approvals",
       "origin": "original",
       "prs": [
-        22
+        22,
+        34
       ],
       "dependsOn": [
         "BNK-018"
@@ -283,7 +288,8 @@
       "title": "Disputes and human handoff",
       "origin": "original",
       "prs": [
-        23
+        23,
+        34
       ],
       "dependsOn": [
         "BNK-019"
@@ -297,7 +303,8 @@
       "title": "Founder onboarding and IP rights",
       "origin": "original",
       "prs": [
-        24
+        24,
+        34
       ],
       "dependsOn": [
         "BNK-020"
@@ -311,7 +318,8 @@
       "title": "Project workspace and milestones",
       "origin": "original",
       "prs": [
-        24
+        24,
+        34
       ],
       "dependsOn": [
         "BNK-021"
@@ -325,7 +333,8 @@
       "title": "Claims and evidence ledger",
       "origin": "original",
       "prs": [
-        25
+        25,
+        34
       ],
       "dependsOn": [
         "BNK-022"
@@ -339,7 +348,8 @@
       "title": "Specialist agents and tools",
       "origin": "original",
       "prs": [
-        25
+        25,
+        34
       ],
       "dependsOn": [
         "BNK-023"
@@ -353,7 +363,8 @@
       "title": "Technical feasibility sandbox",
       "origin": "original",
       "prs": [
-        26
+        26,
+        34
       ],
       "dependsOn": [
         "BNK-024"
@@ -367,7 +378,8 @@
       "title": "Market validation",
       "origin": "original",
       "prs": [
-        26
+        26,
+        34
       ],
       "dependsOn": [
         "BNK-025"
@@ -381,7 +393,8 @@
       "title": "Pricing and unit economics",
       "origin": "original",
       "prs": [
-        26
+        26,
+        34
       ],
       "dependsOn": [
         "BNK-026"
@@ -395,7 +408,8 @@
       "title": "IP and compliance issue spotting",
       "origin": "original",
       "prs": [
-        27
+        27,
+        34
       ],
       "dependsOn": [
         "BNK-027"
@@ -409,7 +423,8 @@
       "title": "Development sprints",
       "origin": "original",
       "prs": [
-        27
+        27,
+        34
       ],
       "dependsOn": [
         "BNK-028"
@@ -423,7 +438,8 @@
       "title": "Independent evidence verification",
       "origin": "original",
       "prs": [
-        28
+        28,
+        34
       ],
       "dependsOn": [
         "BNK-029"
@@ -437,7 +453,8 @@
       "title": "Funding matching and referrals",
       "origin": "original",
       "prs": [
-        29
+        29,
+        34
       ],
       "dependsOn": [
         "BNK-030"
@@ -451,7 +468,8 @@
       "title": "Allocation fairness and cost reporting",
       "origin": "original",
       "prs": [
-        29
+        29,
+        34
       ],
       "dependsOn": [
         "BNK-031"
@@ -465,7 +483,8 @@
       "title": "Identity and screening partner integration",
       "origin": "original",
       "prs": [
-        30
+        30,
+        34
       ],
       "dependsOn": [
         "BNK-032"
@@ -481,7 +500,8 @@
       "title": "Deposits and reconciliation",
       "origin": "original",
       "prs": [
-        31
+        31,
+        34
       ],
       "dependsOn": [
         "BNK-033"
@@ -495,7 +515,8 @@
       "title": "Payments lifecycle and returns",
       "origin": "original",
       "prs": [
-        31
+        31,
+        34
       ],
       "dependsOn": [
         "BNK-034"
@@ -1012,10 +1033,22 @@
       "id": 5326339779,
       "number": 33,
       "title": "BNK-005/BNK-010/BNK-011: Add account ownership and durable module journal",
-      "state": "open",
+      "state": "closed",
       "url": "https://github.com/Galinsky-Labs/Prosperity-Banking-Engine/pull/33",
       "createdAt": "2026-11-15T19:30:32Z",
-      "updatedAt": "2026-11-15T19:30:32Z",
+      "updatedAt": "2026-11-15T19:32:42Z",
+      "mergedAt": "2026-11-15T19:32:42Z",
+      "closedAt": "2026-11-15T19:32:42Z",
+      "draft": false
+    },
+    {
+      "id": 5326398340,
+      "number": 34,
+      "title": "BNK-015..BNK-035: Expose module operations over HTTP with journaled persistence",
+      "state": "open",
+      "url": "https://github.com/Galinsky-Labs/Prosperity-Banking-Engine/pull/34",
+      "createdAt": "2026-11-15T19:37:15Z",
+      "updatedAt": "2026-11-15T19:37:15Z",
       "mergedAt": null,
       "closedAt": null,
       "draft": false
