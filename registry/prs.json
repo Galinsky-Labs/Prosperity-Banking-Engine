@@ -4,7 +4,7 @@
   "roadmapVersion": 1,
   "planVerified": true,
   "plannedPrCount": 47,
-  "observedAt": "2026-11-15T19:47:07Z",
+  "observedAt": "2026-11-15T19:49:38Z",
   "units": [
     {
       "id": "BNK-001",
@@ -613,7 +613,9 @@
       "id": "BNK-042",
       "title": "AI banker safety evaluation",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        38
+      ],
       "dependsOn": [
         "BNK-041"
       ],
@@ -625,7 +627,9 @@
       "id": "BNK-043",
       "title": "Studio IP leakage evaluation",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        38
+      ],
       "dependsOn": [
         "BNK-042"
       ],
@@ -1093,10 +1097,22 @@
       "id": 5326488500,
       "number": 37,
       "title": "BNK-040/BNK-041: Add synthetic report generators and failure injection drills",
-      "state": "open",
+      "state": "closed",
       "url": "https://github.com/Galinsky-Labs/Prosperity-Banking-Engine/pull/37",
       "createdAt": "2026-11-15T19:47:07Z",
-      "updatedAt": "2026-11-15T19:47:07Z",
+      "updatedAt": "2026-11-15T19:47:59Z",
+      "mergedAt": "2026-11-15T19:47:59Z",
+      "closedAt": "2026-11-15T19:47:59Z",
+      "draft": false
+    },
+    {
+      "id": 5326513075,
+      "number": 38,
+      "title": "BNK-042/BNK-043: Add AI banker safety and studio IP leakage evaluations",
+      "state": "open",
+      "url": "https://github.com/Galinsky-Labs/Prosperity-Banking-Engine/pull/38",
+      "createdAt": "2026-11-15T19:49:38Z",
+      "updatedAt": "2026-11-15T19:49:38Z",
       "mergedAt": null,
       "closedAt": null,
       "draft": false
