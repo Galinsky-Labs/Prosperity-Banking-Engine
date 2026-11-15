@@ -24,6 +24,7 @@ Runtime: Node.js 22 `node:http`, no web framework. Start with `DATA_MODE=synthet
 | `POST /v1/accounts/:id/entries` | BNK-008, BNK-007 | Synthetic operator with fresh MFA only. Exact-replay idempotency, optimistic version, and a transactional `ledger.entry.posted` outbox event. |
 | `POST/GET /v1/evidence`, `GET /v1/evidence/:id` | BNK-009 | Metadata only; raw content fields are rejected. |
 | `POST/GET /v1/audit` | BNK-010 | Hash-chained, allowlisted attributes. Process-local in this release. |
+| `POST /v1/chat` | BNK-014 | Grounded banker chat; simulated responder unless `ANTHROPIC_API_KEY` is set. |
 | `POST /v1/outbox/notes`, `GET /v1/outbox/events`, `POST /v1/outbox/claims`, `POST /v1/outbox/events/:id/complete` | BNK-007 | Synthetic operator only; bounded leases. |
 
 Errors use `{"error":{"code","message"},"requestId"}`. Engine codes map to 400 (invalid), 401 (identity), 403 (`*_DENIED`), 404, 409 (replay, version, conflicts, leases), 413, 415, 422 (funds, raw or sensitive data) and 429.

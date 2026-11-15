@@ -5,7 +5,7 @@ import {SYNTHETIC_ISSUER} from './session-tokens.mjs';
  * non-production engine API. They do not represent any institution, person or real account.
  */
 export const SYNTHETIC_ROLES=Object.freeze([
- {name:'customer',permissions:['home:read','bank:read','transactions:read','cashflow:forecast','evidence:read']},
+ {name:'customer',permissions:['home:read','bank:read','transactions:read','cashflow:forecast','evidence:read','chat:ask']},
  {name:'synthetic-operator',permissions:['bank:read','bank:post','transactions:read','evidence:read','evidence:write','audit:read','audit:write','outbox:operate']}
 ]);
 
