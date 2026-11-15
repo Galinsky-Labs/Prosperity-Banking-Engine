@@ -4,7 +4,7 @@
   "roadmapVersion": 1,
   "planVerified": true,
   "plannedPrCount": 47,
-  "observedAt": "2026-11-15T18:50:25Z",
+  "observedAt": "2026-11-15T18:53:42Z",
   "units": [
     {
       "id": "BNK-001",
@@ -265,7 +265,9 @@
       "id": "BNK-019",
       "title": "Bound step-up approvals",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        22
+      ],
       "dependsOn": [
         "BNK-018"
       ],
@@ -831,10 +833,22 @@
       "id": 5325975417,
       "number": 21,
       "title": "BNK-017/BNK-018: Add overdraft opt-in interface and rail-specific policy",
-      "state": "open",
+      "state": "closed",
       "url": "https://github.com/Galinsky-Labs/Prosperity-Banking-Engine/pull/21",
       "createdAt": "2026-11-15T18:50:25Z",
-      "updatedAt": "2026-11-15T18:50:25Z",
+      "updatedAt": "2026-11-15T18:52:06Z",
+      "mergedAt": "2026-11-15T18:52:05Z",
+      "closedAt": "2026-11-15T18:52:05Z",
+      "draft": false
+    },
+    {
+      "id": 5326003246,
+      "number": 22,
+      "title": "BNK-019: Add bound step-up approvals",
+      "state": "open",
+      "url": "https://github.com/Galinsky-Labs/Prosperity-Banking-Engine/pull/22",
+      "createdAt": "2026-11-15T18:53:42Z",
+      "updatedAt": "2026-11-15T18:53:42Z",
       "mergedAt": null,
       "closedAt": null,
       "draft": false
