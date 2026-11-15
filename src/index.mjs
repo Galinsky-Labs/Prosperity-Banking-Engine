@@ -58,3 +58,5 @@ export * from './overdraft-conformance.mjs';
 export * from './credit-explanations.mjs';
 export * from './fraud-aml.mjs';
 export * from './vendor-controls.mjs';
+export * from './regulatory-reporting.mjs';
+export * from './runtime/fault-injection.mjs';
