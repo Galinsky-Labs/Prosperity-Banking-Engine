@@ -4,7 +4,7 @@
   "roadmapVersion": 1,
   "planVerified": true,
   "plannedPrCount": 47,
-  "observedAt": "2026-11-15T18:56:31Z",
+  "observedAt": "2026-11-15T18:59:24Z",
   "units": [
     {
       "id": "BNK-001",
@@ -293,7 +293,9 @@
       "id": "BNK-021",
       "title": "Founder onboarding and IP rights",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        24
+      ],
       "dependsOn": [
         "BNK-020"
       ],
@@ -305,7 +307,9 @@
       "id": "BNK-022",
       "title": "Project workspace and milestones",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        24
+      ],
       "dependsOn": [
         "BNK-021"
       ],
@@ -859,10 +863,22 @@
       "id": 5326027355,
       "number": 23,
       "title": "BNK-020: Add disputes and human handoff",
-      "state": "open",
+      "state": "closed",
       "url": "https://github.com/Galinsky-Labs/Prosperity-Banking-Engine/pull/23",
       "createdAt": "2026-11-15T18:56:31Z",
-      "updatedAt": "2026-11-15T18:56:31Z",
+      "updatedAt": "2026-11-15T18:57:40Z",
+      "mergedAt": "2026-11-15T18:57:40Z",
+      "closedAt": "2026-11-15T18:57:40Z",
+      "draft": false
+    },
+    {
+      "id": 5326052793,
+      "number": 24,
+      "title": "BNK-021/BNK-022: Add founder onboarding, IP rights and project workspaces",
+      "state": "open",
+      "url": "https://github.com/Galinsky-Labs/Prosperity-Banking-Engine/pull/24",
+      "createdAt": "2026-11-15T18:59:24Z",
+      "updatedAt": "2026-11-15T18:59:24Z",
       "mergedAt": null,
       "closedAt": null,
       "draft": false
