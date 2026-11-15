@@ -124,3 +124,14 @@ test('refuses to start outside synthetic data mode',async()=>{
  assert.match(lines.join('\n'),/Refusing to start: DATA_MODE must be/);
  assert.throws(()=>createSyntheticSessionIssuer({secret:'short',directory:createSyntheticDirectory()}),{code:'INVALID_SESSION_SECRET'});
 });
+
+test('banker chat is grounded in synthetic engine data and labelled simulated without a key',async t=>{
+ const engine=await startEngine();t.after(engine.close);
+ assert.equal((await engine.call('GET','/health')).body.chat.kind,'simulated');
+ const token=await engine.session('tenant_demo_alpha','customer-1');
+ const reply=await engine.call('POST','/v1/chat',{token,body:{question:'What is my balance?'}});
+ assert.equal(reply.status,200);assert.equal(reply.body.responder.kind,'simulated');assert.match(reply.body.answer,/USD 3250\.00/);
+ assert.equal((await engine.call('POST','/v1/chat',{token,body:{question:'Send USD 100 to my brother'}})).body.handoff.reason,'ACTION_REQUEST');
+ const operator=await engine.session('tenant_demo_alpha','operator-1');
+ assert.equal((await engine.call('POST','/v1/chat',{token:operator,body:{question:'balance?'}})).status,403);
+});

@@ -23,11 +23,14 @@ export async function main(env=process.env){
  let sessionSecret=env.ENGINE_SESSION_SECRET;
  if(!sessionSecret){sessionSecret=randomBytes(32).toString('hex');log('warn','ENGINE_SESSION_SECRET is not set; using an ephemeral per-process secret (synthetic sessions reset on restart)');}
  const store=await createStoreFromEnvironment(env);
- const runtime=await createEngineRuntime({store,sessionSecret,dataMode:env.DATA_MODE});
+ let chatProvider;
+ if(env.ANTHROPIC_API_KEY){const {createAnthropicChatProvider}=await import('../src/chat/anthropic-provider.mjs');chatProvider=createAnthropicChatProvider({apiKey:env.ANTHROPIC_API_KEY,model:env.ENGINE_CHAT_MODEL||undefined});}
+ else log('info','ANTHROPIC_API_KEY is not set; banker chat uses the labelled simulated deterministic responder');
+ const runtime=await createEngineRuntime({store,sessionSecret,dataMode:env.DATA_MODE,chatProvider});
  const server=createEngineServer({runtime,version});
  const port=Number(env.PORT??3000);
  await new Promise(resolve=>server.listen(port,'0.0.0.0',resolve));
- log('info','Prosperity Banking Engine synthetic API listening',{port,storage:store.kind,dataMode:env.DATA_MODE,version,nonProduction:true});
+ log('info','Prosperity Banking Engine synthetic API listening',{port,storage:store.kind,chat:runtime.chatResponder.id,dataMode:env.DATA_MODE,version,nonProduction:true});
  const shutdown=signal=>{log('info','Shutting down',{signal});server.close(()=>runtime.close().finally(()=>process.exit(0)));setTimeout(()=>process.exit(0),5_000).unref();};
  process.once('SIGTERM',shutdown);process.once('SIGINT',shutdown);
  return {server,runtime};

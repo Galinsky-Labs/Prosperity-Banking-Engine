@@ -12,6 +12,7 @@ import {DurableEventOutbox,DurableEvidenceVault,DurableLedger} from './durable-s
 import {ensure,requireDecision} from './guards.mjs';
 import {SYNTHETIC_ROLES,createSyntheticDirectory,syntheticLedgerSeed} from '../synthetic/directory.mjs';
 import {createSyntheticSessionIssuer} from '../synthetic/session-tokens.mjs';
+import {BankerChatService,buildGroundingFacts,createBankerChatContract,createSimulatedResponder} from '../chat/banker-chat.mjs';
 
 export const ENGINE_NOTICE='Non-production Prosperity Banking Engine demo. Synthetic data only: no real customers, accounts, funds or bank connections. Not a bank and not a bank-branded application.';
 
@@ -25,7 +26,8 @@ export const GATEWAY_RULES=Object.freeze([
  {action:'evidence.write',permission:'evidence:write'},
  {action:'audit.read',permission:'audit:read'},
  {action:'audit.write',permission:'audit:write'},
- {action:'outbox.operate',permission:'outbox:operate'}
+ {action:'outbox.operate',permission:'outbox:operate'},
+ {action:'chat.ask',permission:'chat:ask'}
 ]);
 
 export const EVENT_SCHEMAS=Object.freeze({
@@ -34,7 +36,7 @@ export const EVENT_SCHEMAS=Object.freeze({
 });
 
 /** Compose the engine's existing domain units behind one async runtime used by the HTTP API. */
-export async function createEngineRuntime({store,sessionSecret,dataMode='synthetic',clock=Date.now,seedAt=clock(),sessionTtlMs}={}){
+export async function createEngineRuntime({store,sessionSecret,dataMode='synthetic',clock=Date.now,seedAt=clock(),sessionTtlMs,chatProvider=createSimulatedResponder()}={}){
  ensure(dataMode==='synthetic','DATA_MODE_DENIED','Only DATA_MODE=synthetic is supported by this engine build');
  const directory=createSyntheticDirectory();
  const issuer=createSyntheticSessionIssuer({secret:sessionSecret,directory,ttlMs:sessionTtlMs});
@@ -51,6 +53,7 @@ export async function createEngineRuntime({store,sessionSecret,dataMode='synthet
  const outbox=new DurableEventOutbox({store});
  const vault=new DurableEvidenceVault({contract:vaultContract,gateway,store});
  const audit=new TenantAuditSink({contract:auditContract,gateway});
+ const chat=new BankerChatService({contract:createBankerChatContract({version:'banker-chat-v1',action:'chat.ask'}),gateway,provider:chatProvider});
  await store.seed(syntheticLedgerSeed({adapterId:adapterContract.adapterId,seedAt}));
 
  const readServices=async(identity,accountIds,now)=>{
@@ -85,6 +88,16 @@ export async function createEngineRuntime({store,sessionSecret,dataMode='synthet
   async listEvents(identity,{limit}){const now=clock();requireDecision(gateway,{identity,action:'outbox.operate',assignments:directory.assignmentsFor(identity),now},'OUTBOX_DENIED');return outbox.list(identity,{limit,now});},
   async claimEvents(identity,terms){const now=clock();requireDecision(gateway,{identity,action:'outbox.operate',assignments:directory.assignmentsFor(identity),now},'OUTBOX_DENIED');return outbox.claim(identity,{...terms,now});},
   async completeEvent(identity,terms){const now=clock();requireDecision(gateway,{identity,action:'outbox.operate',assignments:directory.assignmentsFor(identity),now},'OUTBOX_DENIED');return outbox.complete(identity,{...terms,now});},
+  chatResponder:chat.responder,
+  async ask(identity,{question}){
+   const now=clock(),assignments=directory.assignmentsFor(identity);
+   requireDecision(gateway,{identity,action:'chat.ask',assignments,now},'CHAT_DENIED');
+   const services=await readServices(identity,['checking','savings'],now);
+   const home=services.home.getHome({identity,accountIds:['checking','savings'],assignments,now});
+   const transactions=services.normalizer.list({identity,accountId:'checking',limit:100,assignments,now});
+   const forecast=services.forecast.forecast({identity,accountId:'checking',currency:'USD',horizonDays:7,lookbackDays:30,assignments,now});
+   return chat.ask({identity,question,facts:buildGroundingFacts({home,transactions,forecast}),dataCategory:'synthetic_test_data',assignments,now});
+  },
   health:()=>store.health(),
   close:()=>store.close()
  });
