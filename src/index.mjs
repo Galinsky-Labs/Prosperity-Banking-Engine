@@ -48,3 +48,4 @@ export * from './studio/market-validation.mjs';
 export * from './studio/unit-economics.mjs';
 export * from './studio/issue-spotting.mjs';
 export * from './studio/sprints.mjs';
+export * from './studio/verification.mjs';
