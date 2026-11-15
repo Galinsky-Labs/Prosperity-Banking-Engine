@@ -46,3 +46,5 @@ export * from './studio/specialist-agents.mjs';
 export * from './studio/feasibility.mjs';
 export * from './studio/market-validation.mjs';
 export * from './studio/unit-economics.mjs';
+export * from './studio/issue-spotting.mjs';
+export * from './studio/sprints.mjs';
