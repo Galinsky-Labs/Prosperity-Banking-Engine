@@ -72,7 +72,7 @@ export class AgentScheduler {
   return Object.freeze([...this.#agents.values()].filter(agent=>agent.tenantId===identity.tenantId).filter(agent=>{this.#expire(agent,now);return agent.state==='ACTIVE'&&!agent.activeRunId&&agent.nextRunAt<=now;}).map(agent=>this.#view(agent)));
  }
 
- startRun({identity,agentId,runId,assignments,now}){
+ startRun({identity,agentId,runId,projectId=null,assignments,now}){
   this.#worker(identity,assignments,now);bounded(runId,'Run ID',code);
   const agent=this.#agent(identity,agentId);this.#expire(agent,now);
   ensure(!this.#paused.has(identity.tenantId),'AGENT_PAUSED','Tenant agents are paused');
@@ -83,7 +83,8 @@ export class AgentScheduler {
   const status=this.budgetStatus({identity,agentId,assignments,now});
   ensure(status.runsRemaining>=1,'BUDGET_EXHAUSTED','Run budget for the window is exhausted');
   ensure(status.costRemaining>=agent.budget.maxCostPerRun,'BUDGET_EXHAUSTED','Cost budget cannot cover a full run');
-  const run=Object.freeze({tenantId:identity.tenantId,agentId,runId,state:'RUNNING',startedAt:now,deadline:now+agent.maxRunMs,reservedCostUnits:agent.budget.maxCostPerRun,costUnits:null,outcomeCode:null,worker:identity.subject,capabilities:Object.freeze([...agent.capabilities]),syntheticOnly:true});
+  if(projectId!==null)bounded(projectId,'Project ID',code);
+  const run=Object.freeze({tenantId:identity.tenantId,agentId,runId,projectId,state:'RUNNING',startedAt:now,deadline:now+agent.maxRunMs,reservedCostUnits:agent.budget.maxCostPerRun,costUnits:null,outcomeCode:null,worker:identity.subject,capabilities:Object.freeze([...agent.capabilities]),syntheticOnly:true});
   this.#runs.set(`${identity.tenantId}:${runId}`,run);agent.activeRunId=runId;agent.nextRunAt=Math.max(now,agent.nextRunAt+agent.intervalMs);return run;
  }
 
@@ -108,5 +109,9 @@ export class AgentScheduler {
  }
  /** Tenant-wide kill switch: blocks every new run until lifted. */
  setTenantPause({identity,paused,assignments,now}){this.#manage(identity,assignments,now);ensure(typeof paused==='boolean',code,'Pause flag must be boolean');if(paused)this.#paused.add(identity.tenantId);else this.#paused.delete(identity.tenantId);return Object.freeze({tenantId:identity.tenantId,paused});}
+ /** Tenant-wide run history for cost reporting (BNK-032). */
+ usage({identity,assignments,now}){this.#worker(identity,assignments,now);for(const agent of this.#agents.values())if(agent.tenantId===identity.tenantId)this.#expire(agent,now);return Object.freeze([...this.#runs.values()].filter(run=>run.tenantId===identity.tenantId));}
+ /** Internal lookup for the tool router: the run record, or null. */
+ runRecord({tenantId,runId}){return this.#runs.get(`${tenantId}:${runId}`)??null;}
  runs({identity,agentId,assignments,now}){this.#worker(identity,assignments,now);const agent=this.#agent(identity,agentId);this.#expire(agent,now);return Object.freeze([...this.#runs.values()].filter(run=>run.tenantId===identity.tenantId&&run.agentId===agentId));}
 }

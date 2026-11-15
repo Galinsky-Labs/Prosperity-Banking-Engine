@@ -65,6 +65,13 @@ export class SyntheticOnboarding {
   this.#adapter=adapter;this.#gateway=gateway;this.#action=bounded(action,'Review action',code);
  }
 
+ /** Calls the sandbox adapter, then records the outcome. Exposed separately so the API can journal outcomes without PII. */
+ async screenApplicant(applicant){
+  bounded(applicant?.applicantId,'Applicant ID',code);
+  for(const field of ['fullName','dateOfBirth','documentNumber'])ensure(typeof applicant[field]==='string'&&applicant[field].length>=1&&applicant[field].length<=128,code,`${field} is required`);
+  const [idv,screening]=await Promise.all([this.#adapter.verifyIdentity(applicant),this.#adapter.screen(applicant)]);return {applicantId:applicant.applicantId,idv,screening};
+ }
+
  async start({identity,applicant,consentLedger,consentId,now}){
   ensure(consentLedger instanceof ConsentLedger&&ConsentLedger.prototype.permits.call(consentLedger,identity,{consentId,scope:'identity:verify',now}),'CONSENT_REQUIRED','Applicant consent for identity verification is required');
   authorizeDataUse({category:'customer_identity',tenantId:identity.tenantId,operation:'write'});
@@ -72,6 +79,16 @@ export class SyntheticOnboarding {
   for(const field of ['fullName','dateOfBirth','documentNumber'])ensure(typeof applicant[field]==='string'&&applicant[field].length>=1&&applicant[field].length<=128,code,`${field} is required`);
   ensure(!this.#cases.has(`${identity.tenantId}:${applicant.applicantId}`),'ONBOARDING_CONFLICT','Onboarding already started');
   const [idv,screening]=await Promise.all([this.#adapter.verifyIdentity(applicant),this.#adapter.screen(applicant)]);
+  return this.recordOutcome({identity,applicantId:applicant.applicantId,idv,screening,consentLedger,consentId,now});
+ }
+
+ /** Synchronous, PII-free decision step; journaled with adapter outcomes (statuses, check names, references) only. */
+ recordOutcome({identity,applicantId,idv,screening,consentLedger,consentId,now}){
+  ensure(consentLedger instanceof ConsentLedger&&ConsentLedger.prototype.permits.call(consentLedger,identity,{consentId,scope:'identity:verify',now}),'CONSENT_REQUIRED','Applicant consent for identity verification is required');
+  bounded(applicantId,'Applicant ID',code);
+  ensure(['verified','review','failed'].includes(idv?.status)&&Array.isArray(idv.checks)&&['clear','potential-match'].includes(screening?.status)&&Array.isArray(screening.hits),code,'Adapter outcomes are malformed');
+  ensure(!this.#cases.has(`${identity.tenantId}:${applicantId}`),'ONBOARDING_CONFLICT','Onboarding already started');
+  const applicant={applicantId};
   let decision,reasons=[];
   if(screening.status==='potential-match'){decision='manual-review';reasons.push('SCREENING_POTENTIAL_MATCH');}
   else if(idv.status==='review'){decision='manual-review';reasons.push('IDENTITY_INCONCLUSIVE');}

@@ -39,8 +39,25 @@ Writes for the ledger, outbox and evidence vault go through store-backed durable
 
 ## Not included
 
-Production identity, customer account ownership, durable audit chain and consent ledger, delivery to a broker, real provider connectivity, multi-region operation and any production acceptance.
+Production identity, delivery to a broker, real provider connectivity, multi-region operation and any production acceptance.
 
 ## Module operations
 
-`POST /v1/modules/:module/:operation` runs a journaled engine operation with a JSON body; the verified caller, server-side role assignments and server time are always supplied by the engine, never by the body. Current operations: `consents.grant`, `consents.revoke`, `consents.history`, `consents.check`, `audit.append`, `audit.list`. `POST /v1/audit` and `GET /v1/audit` use the same journaled audit chain. Unknown operations return 404.
+`POST /v1/modules/:module/:operation` runs a journaled engine operation with a JSON body; the verified caller, server-side role assignments and server time are always supplied by the engine, never by the body. `GET /v1/modules` lists every operation. Write operations are journaled (see [durable persistence](PERSISTENCE.md)) and rebuilt on restart; read operations are not journaled.
+
+| Module prefix | Unit | Who |
+| --- | --- | --- |
+| `consents.*`, `audit.*` | BNK-005, BNK-010 | customers (own consents); operators and bankers (audit) |
+| `agents.*` | BNK-015 | operators and bankers manage; agents and operators run |
+| `hardship.*` | BNK-016 | customers open and respond for held accounts; agents and bankers draft; bankers approve with fresh MFA |
+| `overdraft.*` | BNK-017, BNK-018 | customers, for held accounts; `evaluate` reads the server-side balance |
+| `stepup.*` | BNK-019 | customers request and approve; bankers approve second-approver actions; agents never approve |
+| `disputes.*` | BNK-020 | customers file against server-fetched transactions on held accounts; bankers work and resolve |
+| `founders.*`, `projects.*`, `claims.*` | BNK-021 to BNK-023 | founders; verifiers read claims |
+| `tools.invoke` | BNK-024 | agents, inside a run they started for that project, where the founder's licence permits evaluation |
+| `feasibility.*`, `market.*`, `economics.*`, `issues.*`, `sprints.*` | BNK-025 to BNK-029 | project members (sprint changes need a non-mentor member) |
+| `verification.*` | BNK-030 | verifiers enroll and decide; the project owner requests system assignment |
+| `funding.*`, `fairness.*` | BNK-031, BNK-032 | founders match and refer (verified claims counted server-side); operators and bankers see allocation and costs |
+| `onboarding.*` | BNK-033 | customers start with their own consent (mock adapter; only PII-free outcomes are journaled); bankers review |
+| `reconcile.run`, `deposits.availability` | BNK-034 | operators reconcile against server-side entries; customers see hold schedules |
+| `payments.*` | BNK-035 | customers create from held accounts and authorize with their own step-up; operators submit, settle, fail and return on the sandbox rail | `POST /v1/audit` and `GET /v1/audit` use the same journaled audit chain. Unknown operations return 404.

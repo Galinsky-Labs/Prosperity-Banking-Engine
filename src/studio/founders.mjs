@@ -66,6 +66,8 @@ export class FounderRegistry {
  }
 
  /** Staff view used by other studio units: confirms a founder exists and the current licence posture. */
+ /** Internal lookup for system components: current licence posture of a founder, or null. */
+ postureOf({tenantId,founderId}){return [...this.#founders.values()].find(record=>record.tenantId===tenantId&&record.founderId===founderId)?.ipPosture??null;}
  lookup({identity,founderId,assignments,now}){
   requireDecision(this.#gateway,{identity,action:this.#contract.actions.review,assignments,now},'FOUNDER_DENIED');bounded(founderId,'Founder ID',code);
   const founder=[...this.#founders.values()].find(record=>record.tenantId===identity.tenantId&&record.founderId===founderId);ensure(founder,'FOUNDER_NOT_FOUND','Founder does not exist');

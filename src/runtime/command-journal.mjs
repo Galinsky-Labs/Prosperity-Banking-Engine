@@ -47,9 +47,10 @@ export class CommandJournal {
   ensure(body&&typeof body==='object'&&!Array.isArray(body),'INVALID_REQUEST','Operation body must be an object');
   const context=this.#contextFor(identity,now);
   const resolved=operation.prepare?await operation.prepare(context,body):body;
-  if(!operation.write)return operation.apply(context,resolved);
+  if(!operation.write)return await operation.apply(context,resolved);
   if(this.#fatal)throw new EngineError('ENGINE_UNAVAILABLE','The engine is restarting to recover durable state');
   const result=operation.apply(context,resolved);
+  ensure(typeof result?.then!=='function','INVALID_OPERATION','Write operations must apply synchronously');
   if(operation.journal===false||(operation.journalIf&&!operation.journalIf(result)))return result;
   this.#seq+=1;
   const append=this.#store.journalAppend({seq:this.#seq,tenantId:identity.tenantId,op:opName,actor:actorOf(identity),body:JSON.parse(JSON.stringify(resolved)),at:now});
