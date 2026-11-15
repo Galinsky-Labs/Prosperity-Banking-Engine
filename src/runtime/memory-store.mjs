@@ -15,13 +15,23 @@ export class MemoryEngineStore {
  #accounts=new Map();#entries=new Map();#entryKeys=new Set();#ledgerRequests=new Map();
  #events=new Map();#eventRequests=new Map();
  #evidence=new Map();#evidenceRequests=new Map();
+ #holders=new Map();#journal=[];
 
- async seed({accounts=[],entries=[]}){
+ async seed({accounts=[],entries=[],holders=[]}){
   let inserted=0;
   for(const account of accounts){const key=`${account.tenantId}:${account.accountId}`;if(this.#accounts.has(key))continue;this.#accounts.set(key,clone({...account,version:account.version??0}));this.#entries.set(key,[]);inserted+=1;}
   for(const entry of entries){if(this.#entryKeys.has(entry.entryKey))continue;const key=`${entry.tenantId}:${entry.accountId}`;if(!this.#entries.has(key))fail('INVALID_SEED','Seed entry account is missing');this.#entries.get(key).push(clone(entry));this.#entryKeys.add(entry.entryKey);inserted+=1;}
+  for(const holder of holders){const key=`${holder.tenantId}:${holder.accountId}:${holder.issuer}:${holder.subject}`;if(this.#holders.has(key))continue;if(!this.#accounts.has(`${holder.tenantId}:${holder.accountId}`))fail('INVALID_SEED','Holder account is missing');this.#holders.set(key,clone(holder));inserted+=1;}
   return {inserted};
  }
+
+ async accountsHeldBy({tenantId,issuer,subject}){return [...this.#holders.values()].filter(holder=>holder.tenantId===tenantId&&holder.issuer===issuer&&holder.subject===subject).map(holder=>holder.accountId).sort();}
+
+ async journalAppend(entry){
+  if(entry.seq!==this.#journal.length+1)fail('JOURNAL_CONFLICT','The module journal was advanced by another writer');
+  this.#journal.push(clone(entry));
+ }
+ async journalLoad(){return this.#journal.map(fromStore);}
 
  async ledgerSnapshot({tenantId,accountIds=null,entryLimit=1000}){
   const accounts=[],entries=[];

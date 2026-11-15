@@ -40,3 +40,7 @@ Writes for the ledger, outbox and evidence vault go through store-backed durable
 ## Not included
 
 Production identity, customer account ownership, durable audit chain and consent ledger, delivery to a broker, real provider connectivity, multi-region operation and any production acceptance.
+
+## Module operations
+
+`POST /v1/modules/:module/:operation` runs a journaled engine operation with a JSON body; the verified caller, server-side role assignments and server time are always supplied by the engine, never by the body. Current operations: `consents.grant`, `consents.revoke`, `consents.history`, `consents.check`, `audit.append`, `audit.list`. `POST /v1/audit` and `GET /v1/audit` use the same journaled audit chain. Unknown operations return 404.

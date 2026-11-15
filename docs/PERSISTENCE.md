@@ -23,3 +23,19 @@ Outbox claims use `FOR UPDATE SKIP LOCKED` with bounded, versioned leases. Compl
 ## Not included
 
 The audit hash chain and consent ledger remain process-local. There is no backup, point-in-time recovery drill, retention policy, encryption key management, replication or production acceptance.
+
+## Account ownership
+
+`migrations/002_ownership_and_journal.sql` adds `ledger_account_holders` (owner or joint, append-only, synthetic-only). The synthetic directory seeds holders. Customers can read, forecast, chat about and dispute only accounts they hold; a request for any other account returns `ACCOUNT_NOT_FOUND`, so existence is not disclosed. Staff roles remain limited to their tenant by the policy gateway. `GET /v1/me/accounts` lists the caller's held accounts (`null` for staff).
+
+## Module command journal
+
+Engine modules from BNK-014 onward, the BNK-010 audit hash chain and the BNK-005 consent ledger keep their state in memory and are made durable by a command journal (`src/runtime/command-journal.mjs`, table `module_journal`):
+
+- Each operation has an async `prepare` that may read the store and resolve server-side evidence, and a synchronous, deterministic `apply` against the domain modules. Read operations are not journaled.
+- After a successful `apply`, the resolved command, the verified actor claims and the time are appended with the next global sequence number. Failed operations are never journaled.
+- At start-up the journal is replayed in order through `apply` with the recorded actor and time, rebuilding identical module state. Replay errors are counted and reported on `/health`.
+- Single writer: a sequence-number conflict means another process appended first. The process then fails stop: it rejects further requests with 503, reports `journal.fatal` on `/health` and exits so the platform restarts it, and the restart rebuilds from the journal. A failed append fails stop the same way, because memory would be ahead of storage.
+- The journal is append-only (trigger enforced) and synthetic-only.
+
+Trade-offs: replay time grows with the journal, and scaling beyond one writer needs per-aggregate storage rather than a single journal.
