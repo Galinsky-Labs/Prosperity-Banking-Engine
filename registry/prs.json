@@ -4,7 +4,7 @@
   "roadmapVersion": 1,
   "planVerified": true,
   "plannedPrCount": 47,
-  "observedAt": "2026-11-15T18:37:50Z",
+  "observedAt": "2026-11-15T18:42:43Z",
   "units": [
     {
       "id": "BNK-001",
@@ -195,7 +195,9 @@
       "id": "BNK-014",
       "title": "Grounded banker chat",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        18
+      ],
       "dependsOn": [
         "BNK-013"
       ],
@@ -773,10 +775,22 @@
       "id": 5325866230,
       "number": 17,
       "title": "BNK-007/BNK-008/BNK-009: Add Postgres persistence with migrations",
-      "state": "open",
+      "state": "closed",
       "url": "https://github.com/Galinsky-Labs/Prosperity-Banking-Engine/pull/17",
       "createdAt": "2026-11-15T18:37:50Z",
-      "updatedAt": "2026-11-15T18:37:50Z",
+      "updatedAt": "2026-11-15T18:39:11Z",
+      "mergedAt": "2026-11-15T18:39:11Z",
+      "closedAt": "2026-11-15T18:39:11Z",
+      "draft": false
+    },
+    {
+      "id": 5325908580,
+      "number": 18,
+      "title": "BNK-014: Add grounded banker chat with provider interface",
+      "state": "open",
+      "url": "https://github.com/Galinsky-Labs/Prosperity-Banking-Engine/pull/18",
+      "createdAt": "2026-11-15T18:42:43Z",
+      "updatedAt": "2026-11-15T18:42:43Z",
       "mergedAt": null,
       "closedAt": null,
       "draft": false
