@@ -4,7 +4,7 @@
   "roadmapVersion": 1,
   "planVerified": true,
   "plannedPrCount": 47,
-  "observedAt": "2026-11-15T18:45:18Z",
+  "observedAt": "2026-11-15T18:48:02Z",
   "units": [
     {
       "id": "BNK-001",
@@ -223,7 +223,9 @@
       "id": "BNK-016",
       "title": "Hardship assistance workflows",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        20
+      ],
       "dependsOn": [
         "BNK-015"
       ],
@@ -801,10 +803,22 @@
       "id": 5325932104,
       "number": 19,
       "title": "BNK-015: Add agent scheduling and budgets",
-      "state": "open",
+      "state": "closed",
       "url": "https://github.com/Galinsky-Labs/Prosperity-Banking-Engine/pull/19",
       "createdAt": "2026-11-15T18:45:18Z",
-      "updatedAt": "2026-11-15T18:45:18Z",
+      "updatedAt": "2026-11-15T18:46:27Z",
+      "mergedAt": "2026-11-15T18:46:27Z",
+      "closedAt": "2026-11-15T18:46:27Z",
+      "draft": false
+    },
+    {
+      "id": 5325955713,
+      "number": 20,
+      "title": "BNK-016: Add hardship assistance workflows",
+      "state": "open",
+      "url": "https://github.com/Galinsky-Labs/Prosperity-Banking-Engine/pull/20",
+      "createdAt": "2026-11-15T18:48:02Z",
+      "updatedAt": "2026-11-15T18:48:02Z",
       "mergedAt": null,
       "closedAt": null,
       "draft": false
