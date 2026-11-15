@@ -39,3 +39,5 @@ export * from './hardship.mjs';
 export * from './overdraft.mjs';
 export * from './step-up.mjs';
 export * from './disputes.mjs';
+export * from './studio/founders.mjs';
+export * from './studio/projects.mjs';
