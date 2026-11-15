@@ -53,3 +53,17 @@ test('validates compiled contracts, supported currencies and synthetic seed acco
  assert.throws(()=>new FakeBankLedger({contract:Object.freeze({...contract}),gateway:gateway()}),/Compiled/);
  assert.throws(()=>new FakeBankLedger({contract,gateway:gateway(),accounts:[{tenantId:'tenant_alpha',accountId:'acct',currency:'EUR',balanceMinor:0}]}),/unsupported/);
 });
+
+test('accepts validated durable snapshots with account versions and historical entries',async()=>{
+ const identity=await identityFor();
+ const entry={tenantId:'tenant_alpha',accountId:'acct-1',entryId:'hist-1',direction:'credit',amountMinor:500,currency:'USD',descriptionCode:'opening',postedAt:now-10,actor:{issuer:'https://identity.example',subject:'seed'}};
+ const bank=new FakeBankLedger({contract,gateway:gateway(),accounts:[{tenantId:'tenant_alpha',accountId:'acct-1',currency:'USD',balanceMinor:500,version:4}],entries:[entry]});
+ assert.equal(bank.readAccount({identity,accountId:'acct-1',assignments:[assignmentFor()],now}).version,4);
+ assert.equal(bank.listEntries({identity,accountId:'acct-1',assignments:[assignmentFor()],now})[0].entryKey,'tenant_alpha:fake-ledger:hist-1');
+ assert.throws(()=>bank.postEntry(post(identity)),/version changed/);
+ assert.equal(bank.postEntry(post(identity,{expectedVersion:4,amountMinor:100})).account.version,5);
+ assert.throws(()=>new FakeBankLedger({contract,gateway:gateway(),accounts:[{tenantId:'tenant_alpha',accountId:'acct-1',currency:'USD',balanceMinor:1,version:-1}]}),/version/);
+ assert.throws(()=>new FakeBankLedger({contract,gateway:gateway(),accounts:[],entries:[entry]}),/account does not exist/);
+ assert.throws(()=>new FakeBankLedger({contract,gateway:gateway(),accounts:[{tenantId:'tenant_alpha',accountId:'acct-1',currency:'USD',balanceMinor:1}],entries:[entry,entry]}),/already exists/);
+ assert.throws(()=>new FakeBankLedger({contract,gateway:gateway(),accounts:[{tenantId:'tenant_alpha',accountId:'acct-1',currency:'USD',balanceMinor:1}],entries:[{...entry,currency:'EUR'}]}),/currency/);
+});

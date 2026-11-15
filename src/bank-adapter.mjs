@@ -25,7 +25,7 @@ function freezeEntry(entry){return Object.freeze({...entry});}
 
 export class FakeBankLedger {
  #contract;#gateway;#accounts=new Map();#requests=new Map();#entries=new Map();#entryIds=new Set();
- constructor({contract,gateway,accounts=[]}){
+ constructor({contract,gateway,accounts=[],entries=[]}){
   ensure(compiledContracts.has(contract),'INVALID_ADAPTER','Compiled bank adapter contract is required');
   ensure(gateway instanceof PolicyGateway,'INVALID_ADAPTER','Policy gateway is required');
   ensure(Array.isArray(accounts)&&accounts.length<=1000,'INVALID_ACCOUNT','Bounded synthetic accounts are required');
@@ -36,8 +36,21 @@ export class FakeBankLedger {
    ensure(contract.currencies.includes(currency),'INVALID_ACCOUNT','Account currency is unsupported');
    ensure(Number.isSafeInteger(candidate.balanceMinor),'INVALID_ACCOUNT','Balance must use safe integer minor units');
    const balanceAsOf=candidate.balanceAsOf??null;ensure(balanceAsOf===null||(Number.isSafeInteger(balanceAsOf)&&balanceAsOf>=0),'INVALID_ACCOUNT','Balance observation time must be a nonnegative integer');
+   const version=candidate.version??0;ensure(Number.isSafeInteger(version)&&version>=0,'INVALID_ACCOUNT','Account version must be a nonnegative integer');
    const key=`${tenantId}:${accountId}`;ensure(!this.#accounts.has(key),'INVALID_ACCOUNT','Synthetic account IDs must be tenant-unique');
-   this.#accounts.set(key,Object.freeze({tenantId,accountId,currency,balanceMinor:candidate.balanceMinor,balanceAsOf,version:0,syntheticOnly:true}));this.#entries.set(key,[]);
+   this.#accounts.set(key,Object.freeze({tenantId,accountId,currency,balanceMinor:candidate.balanceMinor,balanceAsOf,version,syntheticOnly:true}));this.#entries.set(key,[]);
+  }
+  ensure(Array.isArray(entries)&&entries.length<=100_000,'INVALID_ENTRY','Bounded historical entries are required');
+  for(const candidate of entries){
+   const tenantId=bounded(candidate?.tenantId,'Tenant ID'),accountId=bounded(candidate?.accountId,'Account ID'),entryId=bounded(candidate?.entryId,'Entry ID'),descriptionCode=bounded(candidate?.descriptionCode,'Description code');
+   const key=`${tenantId}:${accountId}`,account=this.#accounts.get(key);ensure(account,'INVALID_ENTRY','Historical entry account does not exist');
+   ensure(candidate.direction==='credit'||candidate.direction==='debit','INVALID_ENTRY','Entry direction must be credit or debit');
+   ensure(Number.isSafeInteger(candidate.amountMinor)&&candidate.amountMinor>0,'INVALID_ENTRY','Amount must be positive safe integer minor units');
+   ensure(candidate.currency===account.currency,'INVALID_ENTRY','Entry currency must match the account');
+   ensure(Number.isSafeInteger(candidate.postedAt)&&candidate.postedAt>=0,'INVALID_ENTRY','Posting time must be a nonnegative integer');
+   const actor=Object.freeze({issuer:bounded(candidate.actor?.issuer,'Actor issuer'),subject:bounded(candidate.actor?.subject,'Actor subject')});
+   const entryKey=`${tenantId}:${contract.adapterId}:${entryId}`;ensure(!this.#entryIds.has(entryKey),'ENTRY_CONFLICT','Synthetic entry ID already exists');
+   this.#entries.get(key).push(freezeEntry({entryKey,entryId,tenantId,accountId,direction:candidate.direction,amountMinor:candidate.amountMinor,currency:candidate.currency,descriptionCode,postedAt:candidate.postedAt,actor,syntheticOnly:true}));this.#entryIds.add(entryKey);
   }
  }
 
