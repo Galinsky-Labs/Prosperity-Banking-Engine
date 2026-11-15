@@ -92,3 +92,28 @@ if(url){
   await runtime.close();
  });
 }
+
+if(url){
+ test('ownership and the module journal persist in Postgres across restarts',async()=>{
+  const {startEngine}=await import('./support/runtime-harness.mjs');
+  const pg=(await import('pg')).default,{migrate}=await import('../src/runtime/migrate.mjs'),{PostgresEngineStore}=await import('../src/runtime/postgres-store.mjs');
+  const {randomBytes}=await import('node:crypto');
+  const schema=`engine_test_${randomBytes(6).toString('hex')}`,admin=new pg.Client({connectionString:url});await admin.connect();
+  try{
+   await admin.query(`CREATE SCHEMA ${schema}`);
+   const client=new pg.Client({connectionString:url});await client.connect();await client.query(`SET search_path TO ${schema}`);await migrate(client);await client.end();
+   const first=await startEngine({store:new PostgresEngineStore({connectionString:url,searchPath:schema})});
+   const two=await first.session('tenant_demo_alpha','customer-2');
+   assert.deepEqual((await first.call('GET','/v1/me/accounts',{token:two})).body.accountIds,['checking-2','savings']);
+   assert.equal((await first.op(two,'consents.grant',{consentId:'k',scopes:['identity:verify'],purpose:'onboarding',policyVersion:'p',expiresAt:1_900_000_000_000,requestId:'r'})).status,200);
+   await first.close();
+   const second=await startEngine({store:new PostgresEngineStore({connectionString:url,searchPath:schema}),time:1_800_000_050_000});
+   assert.equal(second.runtime.journalStatus().sequence,1);
+   const again=await second.session('tenant_demo_alpha','customer-2');
+   assert.equal((await second.op(again,'consents.check',{consentId:'k',scope:'identity:verify'})).body.permitted,true);
+   await second.close();
+   const check=new pg.Client({connectionString:url});await check.connect();await check.query(`SET search_path TO ${schema}`);
+   await assert.rejects(check.query('DELETE FROM module_journal'),/append-only/);await check.end();
+  }finally{await admin.query(`DROP SCHEMA ${schema} CASCADE`);await admin.end();}
+ });
+}

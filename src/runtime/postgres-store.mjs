@@ -50,11 +50,12 @@ export class PostgresEngineStore {
   finally{client.release();}
  }
 
- async seed({accounts=[],entries=[]}){
+ async seed({accounts=[],entries=[],holders=[]}){
   return this.#transaction(async client=>{
    let inserted=0;
    for(const account of accounts){const {rowCount}=await client.query('INSERT INTO ledger_accounts (tenant_id,account_id,currency,balance_minor,balance_as_of,version) VALUES ($1,$2,$3,$4,$5,$6) ON CONFLICT DO NOTHING',[account.tenantId,account.accountId,account.currency,account.balanceMinor,account.balanceAsOf??null,account.version??0]);inserted+=rowCount;}
    for(const entry of entries){const {rowCount}=await client.query(INSERT_ENTRY+' ON CONFLICT (entry_key) DO NOTHING',entryParams(entry));inserted+=rowCount;}
+   for(const holder of holders){const {rowCount}=await client.query('INSERT INTO ledger_account_holders (tenant_id,account_id,holder_issuer,holder_subject,relationship) VALUES ($1,$2,$3,$4,$5) ON CONFLICT DO NOTHING',[holder.tenantId,holder.accountId,holder.issuer,holder.subject,holder.relationship]);inserted+=rowCount;}
    return {inserted};
   });
  }
@@ -128,6 +129,14 @@ export class PostgresEngineStore {
 
  async vaultGet({tenantId,evidenceId}){const row=(await this.#pool.query('SELECT record FROM evidence_records WHERE record_key=$1',[`${tenantId}:${evidenceId}`])).rows[0];return row?deepFreeze(row.record):null;}
  async vaultList({tenantId,limit}){return (await this.#pool.query('SELECT record FROM evidence_records WHERE tenant_id=$1 ORDER BY seq LIMIT $2',[tenantId,limit])).rows.map(row=>deepFreeze(row.record));}
+
+ async accountsHeldBy({tenantId,issuer,subject}){return (await this.#pool.query('SELECT account_id FROM ledger_account_holders WHERE tenant_id=$1 AND holder_issuer=$2 AND holder_subject=$3 ORDER BY account_id',[tenantId,issuer,subject])).rows.map(row=>row.account_id);}
+
+ async journalAppend({seq,tenantId,op,actor,body,at}){
+  try{await this.#pool.query('INSERT INTO module_journal (seq,tenant_id,op,actor,body,at) VALUES ($1,$2,$3,$4,$5,$6)',[seq,tenantId,op,JSON.stringify(actor),JSON.stringify(body),at]);}
+  catch(error){if(error?.code==='23505')fail('JOURNAL_CONFLICT','The module journal was advanced by another writer');throw error;}
+ }
+ async journalLoad(){return (await this.#pool.query('SELECT seq,tenant_id,op,actor,body,at FROM module_journal ORDER BY seq')).rows.map(row=>deepFreeze({seq:row.seq,tenantId:row.tenant_id,op:row.op,actor:row.actor,body:row.body,at:row.at}));}
 
  async health(){try{await this.#pool.query('SELECT 1');return {ok:true,kind:this.kind};}catch{return {ok:false,kind:this.kind};}}
  async close(){await this.#pool.end();}

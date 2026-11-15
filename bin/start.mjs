@@ -26,7 +26,8 @@ export async function main(env=process.env){
  let chatProvider;
  if(env.ANTHROPIC_API_KEY){const {createAnthropicChatProvider}=await import('../src/chat/anthropic-provider.mjs');chatProvider=createAnthropicChatProvider({apiKey:env.ANTHROPIC_API_KEY,model:env.ENGINE_CHAT_MODEL||undefined});}
  else log('info','ANTHROPIC_API_KEY is not set; banker chat uses the labelled simulated deterministic responder');
- const runtime=await createEngineRuntime({store,sessionSecret,dataMode:env.DATA_MODE,chatProvider});
+ const runtime=await createEngineRuntime({store,sessionSecret,dataMode:env.DATA_MODE,chatProvider,onFatal:error=>{log('error','Durable journal failure; exiting so the engine restarts and rebuilds from storage',{code:error?.code});setTimeout(()=>process.exit(1),250).unref();}});
+ const journal=runtime.journalStatus();log('info','Module journal replayed',{sequence:journal.sequence,replayErrors:journal.replayErrors});
  const server=createEngineServer({runtime,version});
  const port=Number(env.PORT??3000);
  await new Promise(resolve=>server.listen(port,'0.0.0.0',resolve));

@@ -4,7 +4,7 @@
   "roadmapVersion": 1,
   "planVerified": true,
   "plannedPrCount": 47,
-  "observedAt": "2026-11-15T19:23:33Z",
+  "observedAt": "2026-11-15T19:30:32Z",
   "units": [
     {
       "id": "BNK-001",
@@ -65,7 +65,8 @@
       "title": "Consent and revocation ledger",
       "origin": "original",
       "prs": [
-        6
+        6,
+        33
       ],
       "dependsOn": [
         "BNK-004"
@@ -139,7 +140,8 @@
       "origin": "original",
       "prs": [
         12,
-        16
+        16,
+        33
       ],
       "dependsOn": [
         "BNK-009"
@@ -154,7 +156,8 @@
       "origin": "original",
       "prs": [
         13,
-        16
+        16,
+        33
       ],
       "dependsOn": [
         "BNK-010"
@@ -991,6 +994,30 @@
       "updatedAt": "2026-11-15T19:23:33Z",
       "mergedAt": "2026-11-15T19:23:33Z",
       "closedAt": "2026-11-15T19:23:33Z",
+      "draft": false
+    },
+    {
+      "id": 5326279983,
+      "number": 32,
+      "title": "Record verified #31 merge in canonical registry",
+      "state": "closed",
+      "url": "https://github.com/Galinsky-Labs/Prosperity-Banking-Engine/pull/32",
+      "createdAt": "2026-11-15T19:23:50Z",
+      "updatedAt": "2026-11-15T19:25:14Z",
+      "mergedAt": "2026-11-15T19:25:14Z",
+      "closedAt": "2026-11-15T19:25:14Z",
+      "draft": false
+    },
+    {
+      "id": 5326339779,
+      "number": 33,
+      "title": "BNK-005/BNK-010/BNK-011: Add account ownership and durable module journal",
+      "state": "open",
+      "url": "https://github.com/Galinsky-Labs/Prosperity-Banking-Engine/pull/33",
+      "createdAt": "2026-11-15T19:30:32Z",
+      "updatedAt": "2026-11-15T19:30:32Z",
+      "mergedAt": null,
+      "closedAt": null,
       "draft": false
     }
   ]

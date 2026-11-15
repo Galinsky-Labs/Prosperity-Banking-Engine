@@ -8,7 +8,7 @@ const JSON_HEADERS={'content-type':'application/json; charset=utf-8','cache-cont
 const STATUS_BY_CODE=new Map([
  ['UNAUTHENTICATED',401],['IDENTITY_UNVERIFIED',401],['IDENTITY_EXPIRED',401],
  ['NOT_FOUND',404],['ACCOUNT_NOT_FOUND',404],['EVIDENCE_NOT_FOUND',404],['EVENT_NOT_FOUND',404],['UNKNOWN_SYNTHETIC_SUBJECT',404],
- ['METHOD_NOT_ALLOWED',405],['PAYLOAD_TOO_LARGE',413],['UNSUPPORTED_MEDIA_TYPE',415],['RATE_LIMITED',429],
+ ['METHOD_NOT_ALLOWED',405],['UNKNOWN_OPERATION',404],['ENGINE_UNAVAILABLE',503],['CONSENT_NOT_FOUND',404],['PAYLOAD_TOO_LARGE',413],['UNSUPPORTED_MEDIA_TYPE',415],['RATE_LIMITED',429],
  ['REPLAY_MISMATCH',409],['VERSION_CONFLICT',409],['ENTRY_CONFLICT',409],['EVENT_CONFLICT',409],['EVIDENCE_CONFLICT',409],['AUDIT_CONFLICT',409],['REQUEST_CONFLICT',409],['LEASE_DENIED',409],['LEASE_EXPIRED',409],
  ['INSUFFICIENT_FUNDS',422],['CHAT_PROVIDER_UNAVAILABLE',503],['AMOUNT_OVERFLOW',422],['RAW_EVIDENCE_DENIED',422],['SENSITIVE_AUDIT_DATA',422],['DATA_USE_DENIED',422]
 ]);
@@ -69,14 +69,15 @@ export function buildRoutes(runtime,{version}){
  router.add('GET','/',async()=>({status:200,body:{service:'prosperity-banking-engine',version,notice:runtime.notice,dataMode:runtime.dataMode,nonProduction:true,docs:'https://github.com/Galinsky-Labs/Prosperity-Banking-Engine/blob/main/docs/HTTP_API.md'}}),{auth:false});
  router.add('GET','/health',async()=>{
   let storage;try{storage=await runtime.health();}catch{storage={ok:false};}
-  return {status:storage.ok?200:503,body:{status:storage.ok?'ok':'degraded',service:'prosperity-banking-engine',version,dataMode:runtime.dataMode,nonProduction:true,storage:{ok:storage.ok,kind:runtime.store.kind},chat:{kind:runtime.chatResponder.kind,id:runtime.chatResponder.id}}};
+  const journal=runtime.journalStatus();if(journal.fatal)storage={...storage,ok:false};
+  return {status:storage.ok?200:503,body:{status:storage.ok?'ok':'degraded',service:'prosperity-banking-engine',version,dataMode:runtime.dataMode,nonProduction:true,storage:{ok:storage.ok,kind:runtime.store.kind},chat:{kind:runtime.chatResponder.kind,id:runtime.chatResponder.id},journal:{sequence:journal.sequence,replayErrors:journal.replayErrors,fatal:journal.fatal!==null}}};
  },{auth:false});
  router.add('GET','/v1/synthetic/directory',async()=>({status:200,body:{syntheticOnly:true,notice:runtime.notice,tenants:runtime.directory.tenants}}),{auth:false});
  router.add('POST','/v1/synthetic/sessions',async({body})=>({status:201,body:runtime.issueSession(pick(body,['tenantId','subject']))}),{auth:false});
  router.add('GET','/v1/me',async({identity})=>({status:200,body:{tenantId:identity.tenantId,subject:identity.subject,issuer:identity.issuer,expiresAt:identity.expiresAt,roles:runtime.assignmentsFor(identity).map(assignment=>assignment.role),syntheticOnly:true}}));
  router.add('GET','/v1/home',async({identity,query})=>{
-  const raw=query.get('accountIds')??'checking,savings';
-  return {status:200,body:await runtime.home(identity,{accountIds:raw.split(',').filter(Boolean)})};
+  const raw=query.get('accountIds');
+  return {status:200,body:await runtime.home(identity,{accountIds:raw===null?null:raw.split(',').filter(Boolean)})};
  });
  router.add('GET','/v1/accounts/:accountId',async({identity,params})=>({status:200,body:await runtime.readAccount(identity,{accountId:params.accountId})}));
  router.add('GET','/v1/accounts/:accountId/transactions',async({identity,params,query})=>({status:200,body:{transactions:await runtime.transactions(identity,{accountId:params.accountId,limit:intParam(query.get('limit'),100)}),syntheticOnly:true}}));
@@ -94,6 +95,8 @@ export function buildRoutes(runtime,{version}){
  router.add('GET','/v1/outbox/events',async({identity,query})=>({status:200,body:{events:await runtime.listEvents(identity,{limit:intParam(query.get('limit'),100)}),syntheticOnly:true}}));
  router.add('POST','/v1/outbox/claims',async({identity,body})=>({status:200,body:{events:await runtime.claimEvents(identity,pick(body,['workerId','limit','leaseMs'])),syntheticOnly:true}}));
  router.add('POST','/v1/outbox/events/:eventId/complete',async({identity,params,body})=>({status:200,body:await runtime.completeEvent(identity,{...pick(body,['workerId','leaseVersion']),eventId:params.eventId})}));
+ router.add('GET','/v1/me/accounts',async({identity})=>({status:200,body:{accountIds:await runtime.heldAccounts(identity),scope:'holder-or-staff',syntheticOnly:true}}));
+ router.add('POST','/v1/modules/:module/:operation',async({identity,params,body})=>({status:200,body:await runtime.execute(`${params.module}.${params.operation}`,identity,body)}));
  router.add('POST','/v1/chat',async({identity,body})=>({status:200,body:await runtime.ask(identity,pick(body,['question']))}));
  return router;
 }

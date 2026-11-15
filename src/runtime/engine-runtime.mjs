@@ -4,12 +4,13 @@ import {PolicyGateway,createGatewayPolicy} from '../policy-gateway.mjs';
 import {createBankAdapterContract} from '../bank-adapter.mjs';
 import {createEventSchema} from '../event-outbox.mjs';
 import {createEvidenceVaultContract} from '../evidence-vault.mjs';
-import {createAuditSinkContract,TenantAuditSink} from '../audit-sink.mjs';
 import {BankingHomeService,createBankingHomeContract} from '../banking-home.mjs';
 import {TransactionNormalizer,createTransactionNormalizerContract} from '../transaction-normalizer.mjs';
 import {CashFlowForecastService,createCashFlowForecastContract} from '../cash-flow-forecast.mjs';
 import {DurableEventOutbox,DurableEvidenceVault,DurableLedger} from './durable-services.mjs';
 import {ensure,requireDecision} from './guards.mjs';
+import {CommandJournal} from './command-journal.mjs';
+import {createModuleOperations} from './module-operations.mjs';
 import {SYNTHETIC_ROLES,createSyntheticDirectory,syntheticLedgerSeed} from '../synthetic/directory.mjs';
 import {createSyntheticSessionIssuer} from '../synthetic/session-tokens.mjs';
 import {BankerChatService,buildGroundingFacts,createBankerChatContract,createSimulatedResponder} from '../chat/banker-chat.mjs';
@@ -27,7 +28,8 @@ export const GATEWAY_RULES=Object.freeze([
  {action:'audit.read',permission:'audit:read'},
  {action:'audit.write',permission:'audit:write'},
  {action:'outbox.operate',permission:'outbox:operate'},
- {action:'chat.ask',permission:'chat:ask'}
+ {action:'chat.ask',permission:'chat:ask'},
+ {action:'consents.manage',permission:'consents:manage'}
 ]);
 
 export const EVENT_SCHEMAS=Object.freeze({
@@ -36,7 +38,7 @@ export const EVENT_SCHEMAS=Object.freeze({
 });
 
 /** Compose the engine's existing domain units behind one async runtime used by the HTTP API. */
-export async function createEngineRuntime({store,sessionSecret,dataMode='synthetic',clock=Date.now,seedAt=clock(),sessionTtlMs,chatProvider=createSimulatedResponder()}={}){
+export async function createEngineRuntime({store,sessionSecret,dataMode='synthetic',clock=Date.now,seedAt=clock(),sessionTtlMs,chatProvider=createSimulatedResponder(),onFatal=()=>{}}={}){
  ensure(dataMode==='synthetic','DATA_MODE_DENIED','Only DATA_MODE=synthetic is supported by this engine build');
  const directory=createSyntheticDirectory();
  const issuer=createSyntheticSessionIssuer({secret:sessionSecret,directory,ttlMs:sessionTtlMs});
@@ -47,14 +49,21 @@ export async function createEngineRuntime({store,sessionSecret,dataMode='synthet
  const normalizerContract=createTransactionNormalizerContract({version:'normalizer-v1',action:'bank.transactions.read',maxTransactions:500});
  const forecastContract=createCashFlowForecastContract({version:'forecast-v1',action:'bank.cashflow.forecast',maxTransactions:500,maxScheduledItems:50,maxHorizonDays:90,maxLookbackDays:365});
  const vaultContract=createEvidenceVaultContract({version:'vault-v1',actions:{read:'evidence.read',write:'evidence.write'}});
- const auditContract=createAuditSinkContract({version:'audit-v1',actions:{read:'audit.read',write:'audit.write'},attributeKeys:['accountRef','amountMinor','channel','reasonCode']});
 
  const ledger=new DurableLedger({contract:adapterContract,gateway,store,eventSchema:EVENT_SCHEMAS.ledgerEntryPosted});
  const outbox=new DurableEventOutbox({store});
  const vault=new DurableEvidenceVault({contract:vaultContract,gateway,store});
- const audit=new TenantAuditSink({contract:auditContract,gateway});
  const chat=new BankerChatService({contract:createBankerChatContract({version:'banker-chat-v1',action:'chat.ask'}),gateway,provider:chatProvider});
  await store.seed(syntheticLedgerSeed({adapterId:adapterContract.adapterId,seedAt}));
+
+ const {operations}=createModuleOperations({gateway});
+ const contextFor=(identity,now)=>Object.freeze({identity,now,assignments:directory.assignmentsFor(identity)});
+ const journal=new CommandJournal({store,operations,contextFor,onFatal});
+ await journal.replay();
+
+ /** Customers see only accounts they hold (owner or joint); staff roles are tenant-scoped by the policy gateway. */
+ const heldAccounts=async identity=>directory.assignmentsFor(identity).some(assignment=>assignment.role==='customer')?store.accountsHeldBy({tenantId:identity.tenantId,issuer:identity.issuer,subject:identity.subject}):null;
+ const requireHeld=async(identity,accountIds)=>{const held=await heldAccounts(identity);if(held!==null)for(const accountId of accountIds)ensure(held.includes(accountId),'ACCOUNT_NOT_FOUND','Synthetic account does not exist');return held;};
 
  const readServices=async(identity,accountIds,now)=>{
   const adapter=await ledger.snapshot({identity,accountIds,now});
@@ -71,16 +80,22 @@ export async function createEngineRuntime({store,sessionSecret,dataMode='synthet
    catch(error){throw new EngineError('UNAUTHENTICATED','A valid synthetic session token is required');}
   },
   assignmentsFor:identity=>directory.assignmentsFor(identity),
-  async home(identity,{accountIds}){const now=clock();return (await readServices(identity,accountIds,now)).home.getHome({identity,accountIds,assignments:directory.assignmentsFor(identity),now});},
-  readAccount:(identity,{accountId})=>ledger.readAccount({identity,accountId,assignments:directory.assignmentsFor(identity),now:clock()}),
-  async transactions(identity,{accountId,limit}){const now=clock();return (await readServices(identity,[accountId],now)).normalizer.list({identity,accountId,limit,assignments:directory.assignmentsFor(identity),now});},
-  async forecast(identity,{accountId,...terms}){const now=clock();return (await readServices(identity,[accountId],now)).forecast.forecast({identity,accountId,...terms,assignments:directory.assignmentsFor(identity),now});},
+  heldAccounts,
+  async home(identity,{accountIds=null}={}){
+   const now=clock(),held=await heldAccounts(identity),ids=accountIds??held??['checking','savings'];
+   await requireHeld(identity,ids);return (await readServices(identity,ids,now)).home.getHome({identity,accountIds:ids,assignments:directory.assignmentsFor(identity),now});
+  },
+  readAccount:async(identity,{accountId})=>{await requireHeld(identity,[accountId]);return ledger.readAccount({identity,accountId,assignments:directory.assignmentsFor(identity),now:clock()});},
+  async transactions(identity,{accountId,limit}){await requireHeld(identity,[accountId]);const now=clock();return (await readServices(identity,[accountId],now)).normalizer.list({identity,accountId,limit,assignments:directory.assignmentsFor(identity),now});},
+  async forecast(identity,{accountId,...terms}){await requireHeld(identity,[accountId]);const now=clock();return (await readServices(identity,[accountId],now)).forecast.forecast({identity,accountId,...terms,assignments:directory.assignmentsFor(identity),now});},
   postEntry:(identity,command)=>ledger.postEntry({...command,identity,assignments:directory.assignmentsFor(identity),now:clock()}),
   storeEvidence:(identity,request)=>vault.store({...request,identity,assignments:directory.assignmentsFor(identity),now:clock()}),
   getEvidence:(identity,{evidenceId})=>vault.get({identity,evidenceId,assignments:directory.assignmentsFor(identity),now:clock()}),
   listEvidence:(identity,{limit})=>vault.list({identity,limit,assignments:directory.assignmentsFor(identity),now:clock()}),
-  appendAudit:async(identity,record)=>audit.append({...record,identity,assignments:directory.assignmentsFor(identity),now:clock()}),
-  listAudit:async(identity,query)=>audit.list({...query,identity,assignments:directory.assignmentsFor(identity),now:clock()}),
+  execute:(op,identity,body)=>journal.execute(op,identity,body,clock()),
+  journalStatus:()=>journal.status,
+  appendAudit:(identity,record)=>journal.execute('audit.append',identity,record,clock()),
+  listAudit:async(identity,query)=>(await journal.execute('audit.list',identity,query,clock())).records,
   async enqueueNote(identity,{eventId,aggregateId,noteCode,idempotencyKey}){
    const now=clock();requireDecision(gateway,{identity,action:'outbox.operate',assignments:directory.assignmentsFor(identity),now},'OUTBOX_DENIED');
    return outbox.enqueue(identity,EVENT_SCHEMAS.syntheticNote,{eventId,aggregateId,payload:{noteCode},idempotencyKey,occurredAt:now,now});
@@ -92,13 +107,15 @@ export async function createEngineRuntime({store,sessionSecret,dataMode='synthet
   async ask(identity,{question}){
    const now=clock(),assignments=directory.assignmentsFor(identity);
    requireDecision(gateway,{identity,action:'chat.ask',assignments,now},'CHAT_DENIED');
-   const services=await readServices(identity,['checking','savings'],now);
-   const home=services.home.getHome({identity,accountIds:['checking','savings'],assignments,now});
-   const transactions=services.normalizer.list({identity,accountId:'checking',limit:100,assignments,now});
-   const forecast=services.forecast.forecast({identity,accountId:'checking',currency:'USD',horizonDays:7,lookbackDays:30,assignments,now});
+   const ids=(await heldAccounts(identity))??['checking','savings'];ensure(ids.length>0,'ACCOUNT_NOT_FOUND','No accounts are held');
+   const primary=ids.find(id=>id.startsWith('checking'))??ids[0];
+   const services=await readServices(identity,ids,now);
+   const home=services.home.getHome({identity,accountIds:ids,assignments,now});
+   const transactions=services.normalizer.list({identity,accountId:primary,limit:100,assignments,now});
+   const forecast=services.forecast.forecast({identity,accountId:primary,currency:'USD',horizonDays:7,lookbackDays:30,assignments,now});
    return chat.ask({identity,question,facts:buildGroundingFacts({home,transactions,forecast}),dataCategory:'synthetic_test_data',assignments,now});
   },
   health:()=>store.health(),
-  close:()=>store.close()
+  async close(){await journal.drain();await store.close();}
  });
 }

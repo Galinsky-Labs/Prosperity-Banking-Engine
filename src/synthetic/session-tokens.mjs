@@ -5,6 +5,8 @@ const ensure=(condition,code,message)=>{if(!condition)throw new EngineError(code
 const b64=value=>Buffer.from(value).toString('base64url');
 export const SYNTHETIC_ISSUER='urn:prosperity-engine:synthetic-session-issuer';
 export const SYNTHETIC_METHODS=Object.freeze(['synthetic-session','synthetic-second-factor']);
+/** Synthetic agents authenticate as workloads, so step-up, dispute and verification controls treat them as non-human. */
+export const SYNTHETIC_WORKLOAD_METHODS=Object.freeze(['workload','synthetic-second-factor']);
 
 /**
  * Demo-only HMAC session issuer for synthetic tenants. It is NOT a production identity provider:
@@ -18,8 +20,9 @@ export function createSyntheticSessionIssuer({secret,directory,ttlMs=15*60_000})
  return Object.freeze({
   issuer:SYNTHETIC_ISSUER,
   issue({tenantId,subject,now}){
-   ensure(directory.findSubject(tenantId,subject),'UNKNOWN_SYNTHETIC_SUBJECT','Synthetic subject is not in the demo directory');
-   const claims={v:1,iss:SYNTHETIC_ISSUER,tid:tenantId,sub:subject,iat:now,exp:now+ttlMs,amr:SYNTHETIC_METHODS};
+   const entry=directory.findSubject(tenantId,subject);
+   ensure(entry,'UNKNOWN_SYNTHETIC_SUBJECT','Synthetic subject is not in the demo directory');
+   const claims={v:1,iss:SYNTHETIC_ISSUER,tid:tenantId,sub:subject,iat:now,exp:now+ttlMs,amr:entry.workload?SYNTHETIC_WORKLOAD_METHODS:SYNTHETIC_METHODS};
    const body=b64(JSON.stringify(claims));
    return Object.freeze({token:`pbe1.${body}.${sign(body).toString('base64url')}`,expiresAt:claims.exp,syntheticOnly:true});
   },
