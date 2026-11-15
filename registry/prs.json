@@ -4,7 +4,7 @@
   "roadmapVersion": 1,
   "planVerified": true,
   "plannedPrCount": 47,
-  "observedAt": "2026-11-15T19:22:09Z",
+  "observedAt": "2026-11-15T19:23:33Z",
   "units": [
     {
       "id": "BNK-001",
@@ -985,12 +985,12 @@
       "id": 5326264216,
       "number": 31,
       "title": "BNK-034/BNK-035: Add reconciliation, deposit holds and sandbox payment lifecycle",
-      "state": "open",
+      "state": "closed",
       "url": "https://github.com/Galinsky-Labs/Prosperity-Banking-Engine/pull/31",
       "createdAt": "2026-11-15T19:22:09Z",
-      "updatedAt": "2026-11-15T19:22:09Z",
-      "mergedAt": null,
-      "closedAt": null,
+      "updatedAt": "2026-11-15T19:23:33Z",
+      "mergedAt": "2026-11-15T19:23:33Z",
+      "closedAt": "2026-11-15T19:23:33Z",
       "draft": false
     }
   ]
