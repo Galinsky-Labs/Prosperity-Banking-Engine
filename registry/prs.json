@@ -4,7 +4,7 @@
   "roadmapVersion": 1,
   "planVerified": true,
   "plannedPrCount": 47,
-  "observedAt": "2026-11-15T19:42:24Z",
+  "observedAt": "2026-11-15T19:47:07Z",
   "units": [
     {
       "id": "BNK-001",
@@ -585,7 +585,9 @@
       "id": "BNK-040",
       "title": "Regulatory reporting",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        37
+      ],
       "dependsOn": [
         "BNK-039"
       ],
@@ -597,7 +599,9 @@
       "id": "BNK-041",
       "title": "Failure injection and recovery",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        37
+      ],
       "dependsOn": [
         "BNK-040"
       ],
@@ -1077,10 +1081,22 @@
       "id": 5326442872,
       "number": 36,
       "title": "BNK-038/BNK-039: Add mock fraud/AML handoffs and vendor controls",
-      "state": "open",
+      "state": "closed",
       "url": "https://github.com/Galinsky-Labs/Prosperity-Banking-Engine/pull/36",
       "createdAt": "2026-11-15T19:42:24Z",
-      "updatedAt": "2026-11-15T19:42:24Z",
+      "updatedAt": "2026-11-15T19:43:32Z",
+      "mergedAt": "2026-11-15T19:43:32Z",
+      "closedAt": "2026-11-15T19:43:32Z",
+      "draft": false
+    },
+    {
+      "id": 5326488500,
+      "number": 37,
+      "title": "BNK-040/BNK-041: Add synthetic report generators and failure injection drills",
+      "state": "open",
+      "url": "https://github.com/Galinsky-Labs/Prosperity-Banking-Engine/pull/37",
+      "createdAt": "2026-11-15T19:47:07Z",
+      "updatedAt": "2026-11-15T19:47:07Z",
       "mergedAt": null,
       "closedAt": null,
       "draft": false
