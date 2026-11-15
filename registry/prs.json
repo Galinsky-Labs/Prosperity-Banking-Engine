@@ -4,7 +4,7 @@
   "roadmapVersion": 1,
   "planVerified": true,
   "plannedPrCount": 47,
-  "observedAt": "2026-11-15T19:02:01Z",
+  "observedAt": "2026-11-15T19:05:09Z",
   "units": [
     {
       "id": "BNK-001",
@@ -349,7 +349,9 @@
       "id": "BNK-025",
       "title": "Technical feasibility sandbox",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        26
+      ],
       "dependsOn": [
         "BNK-024"
       ],
@@ -361,7 +363,9 @@
       "id": "BNK-026",
       "title": "Market validation",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        26
+      ],
       "dependsOn": [
         "BNK-025"
       ],
@@ -373,7 +377,9 @@
       "id": "BNK-027",
       "title": "Pricing and unit economics",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        26
+      ],
       "dependsOn": [
         "BNK-026"
       ],
@@ -891,10 +897,22 @@
       "id": 5326074817,
       "number": 25,
       "title": "BNK-023/BNK-024: Add claims ledger and specialist agent tools",
-      "state": "open",
+      "state": "closed",
       "url": "https://github.com/Galinsky-Labs/Prosperity-Banking-Engine/pull/25",
       "createdAt": "2026-11-15T19:02:01Z",
-      "updatedAt": "2026-11-15T19:02:01Z",
+      "updatedAt": "2026-11-15T19:03:40Z",
+      "mergedAt": "2026-11-15T19:03:40Z",
+      "closedAt": "2026-11-15T19:03:40Z",
+      "draft": false
+    },
+    {
+      "id": 5326102224,
+      "number": 26,
+      "title": "BNK-025/BNK-026/BNK-027: Add feasibility sandbox, market validation and unit economics",
+      "state": "open",
+      "url": "https://github.com/Galinsky-Labs/Prosperity-Banking-Engine/pull/26",
+      "createdAt": "2026-11-15T19:05:09Z",
+      "updatedAt": "2026-11-15T19:05:09Z",
       "mergedAt": null,
       "closedAt": null,
       "draft": false
