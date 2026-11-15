@@ -4,7 +4,7 @@
   "roadmapVersion": 1,
   "planVerified": true,
   "plannedPrCount": 47,
-  "observedAt": "2026-11-15T19:11:42Z",
+  "observedAt": "2026-11-15T19:13:51Z",
   "units": [
     {
       "id": "BNK-001",
@@ -419,7 +419,9 @@
       "id": "BNK-030",
       "title": "Independent evidence verification",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        28
+      ],
       "dependsOn": [
         "BNK-029"
       ],
@@ -925,10 +927,22 @@
       "id": 5326161827,
       "number": 27,
       "title": "BNK-028/BNK-029: Add IP and compliance issue spotting and development sprints",
-      "state": "open",
+      "state": "closed",
       "url": "https://github.com/Galinsky-Labs/Prosperity-Banking-Engine/pull/27",
       "createdAt": "2026-11-15T19:11:42Z",
-      "updatedAt": "2026-11-15T19:11:42Z",
+      "updatedAt": "2026-11-15T19:12:50Z",
+      "mergedAt": "2026-11-15T19:12:50Z",
+      "closedAt": "2026-11-15T19:12:50Z",
+      "draft": false
+    },
+    {
+      "id": 5326184420,
+      "number": 28,
+      "title": "BNK-030: Add independent evidence verification",
+      "state": "open",
+      "url": "https://github.com/Galinsky-Labs/Prosperity-Banking-Engine/pull/28",
+      "createdAt": "2026-11-15T19:13:51Z",
+      "updatedAt": "2026-11-15T19:13:51Z",
       "mergedAt": null,
       "closedAt": null,
       "draft": false
