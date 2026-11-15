@@ -4,7 +4,7 @@
   "roadmapVersion": 1,
   "planVerified": true,
   "plannedPrCount": 47,
-  "observedAt": "2026-11-15T18:48:02Z",
+  "observedAt": "2026-11-15T18:50:25Z",
   "units": [
     {
       "id": "BNK-001",
@@ -237,7 +237,9 @@
       "id": "BNK-017",
       "title": "Overdraft opt-in interface",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        21
+      ],
       "dependsOn": [
         "BNK-016"
       ],
@@ -249,7 +251,9 @@
       "id": "BNK-018",
       "title": "Rail-specific overdraft policy",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        21
+      ],
       "dependsOn": [
         "BNK-017"
       ],
@@ -815,10 +819,22 @@
       "id": 5325955713,
       "number": 20,
       "title": "BNK-016: Add hardship assistance workflows",
-      "state": "open",
+      "state": "closed",
       "url": "https://github.com/Galinsky-Labs/Prosperity-Banking-Engine/pull/20",
       "createdAt": "2026-11-15T18:48:02Z",
-      "updatedAt": "2026-11-15T18:48:02Z",
+      "updatedAt": "2026-11-15T18:48:56Z",
+      "mergedAt": "2026-11-15T18:48:56Z",
+      "closedAt": "2026-11-15T18:48:56Z",
+      "draft": false
+    },
+    {
+      "id": 5325975417,
+      "number": 21,
+      "title": "BNK-017/BNK-018: Add overdraft opt-in interface and rail-specific policy",
+      "state": "open",
+      "url": "https://github.com/Galinsky-Labs/Prosperity-Banking-Engine/pull/21",
+      "createdAt": "2026-11-15T18:50:25Z",
+      "updatedAt": "2026-11-15T18:50:25Z",
       "mergedAt": null,
       "closedAt": null,
       "draft": false
