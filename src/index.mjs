@@ -33,3 +33,5 @@ export * from './audit-sink.mjs';
 export * from './banking-home.mjs';
 export * from './transaction-normalizer.mjs';
 export * from './cash-flow-forecast.mjs';
+export * from './chat/banker-chat.mjs';
+export * from './agent-scheduler.mjs';
