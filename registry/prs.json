@@ -4,7 +4,7 @@
   "roadmapVersion": 1,
   "planVerified": true,
   "plannedPrCount": 47,
-  "observedAt": "2026-11-15T19:16:47Z",
+  "observedAt": "2026-11-15T19:19:21Z",
   "units": [
     {
       "id": "BNK-001",
@@ -461,7 +461,9 @@
       "id": "BNK-033",
       "title": "Identity and screening partner integration",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        30
+      ],
       "dependsOn": [
         "BNK-032"
       ],
@@ -955,10 +957,22 @@
       "id": 5326212414,
       "number": 29,
       "title": "BNK-031/BNK-032: Add funding matching, referrals, fair allocation and cost reporting",
-      "state": "open",
+      "state": "closed",
       "url": "https://github.com/Galinsky-Labs/Prosperity-Banking-Engine/pull/29",
       "createdAt": "2026-11-15T19:16:47Z",
-      "updatedAt": "2026-11-15T19:16:47Z",
+      "updatedAt": "2026-11-15T19:18:10Z",
+      "mergedAt": "2026-11-15T19:18:10Z",
+      "closedAt": "2026-11-15T19:18:10Z",
+      "draft": false
+    },
+    {
+      "id": 5326239054,
+      "number": 30,
+      "title": "BNK-033: Add identity and screening partner adapter contract (sandbox only)",
+      "state": "open",
+      "url": "https://github.com/Galinsky-Labs/Prosperity-Banking-Engine/pull/30",
+      "createdAt": "2026-11-15T19:19:21Z",
+      "updatedAt": "2026-11-15T19:19:21Z",
       "mergedAt": null,
       "closedAt": null,
       "draft": false

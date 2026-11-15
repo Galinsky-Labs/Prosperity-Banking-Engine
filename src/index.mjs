@@ -51,3 +51,4 @@ export * from './studio/sprints.mjs';
 export * from './studio/verification.mjs';
 export * from './studio/funding.mjs';
 export * from './studio/fairness.mjs';
+export * from './partners/identity-screening.mjs';
