@@ -56,3 +56,5 @@ export * from './reconciliation.mjs';
 export * from './payments.mjs';
 export * from './overdraft-conformance.mjs';
 export * from './credit-explanations.mjs';
+export * from './fraud-aml.mjs';
+export * from './vendor-controls.mjs';

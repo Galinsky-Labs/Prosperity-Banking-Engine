@@ -4,7 +4,7 @@
   "roadmapVersion": 1,
   "planVerified": true,
   "plannedPrCount": 47,
-  "observedAt": "2026-11-15T19:40:14Z",
+  "observedAt": "2026-11-15T19:42:24Z",
   "units": [
     {
       "id": "BNK-001",
@@ -557,7 +557,9 @@
       "id": "BNK-038",
       "title": "Fraud and AML handoffs",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        36
+      ],
       "dependsOn": [
         "BNK-037"
       ],
@@ -569,7 +571,9 @@
       "id": "BNK-039",
       "title": "Affiliate/vendor controls",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        36
+      ],
       "dependsOn": [
         "BNK-038"
       ],
@@ -1061,10 +1065,22 @@
       "id": 5326424369,
       "number": 35,
       "title": "BNK-036/BNK-037: Add overdraft conformance evidence and credit explanations",
-      "state": "open",
+      "state": "closed",
       "url": "https://github.com/Galinsky-Labs/Prosperity-Banking-Engine/pull/35",
       "createdAt": "2026-11-15T19:40:14Z",
-      "updatedAt": "2026-11-15T19:40:14Z",
+      "updatedAt": "2026-11-15T19:41:07Z",
+      "mergedAt": "2026-11-15T19:41:07Z",
+      "closedAt": "2026-11-15T19:41:07Z",
+      "draft": false
+    },
+    {
+      "id": 5326442872,
+      "number": 36,
+      "title": "BNK-038/BNK-039: Add mock fraud/AML handoffs and vendor controls",
+      "state": "open",
+      "url": "https://github.com/Galinsky-Labs/Prosperity-Banking-Engine/pull/36",
+      "createdAt": "2026-11-15T19:42:24Z",
+      "updatedAt": "2026-11-15T19:42:24Z",
       "mergedAt": null,
       "closedAt": null,
       "draft": false
