@@ -54,3 +54,5 @@ export * from './studio/fairness.mjs';
 export * from './partners/identity-screening.mjs';
 export * from './reconciliation.mjs';
 export * from './payments.mjs';
+export * from './overdraft-conformance.mjs';
+export * from './credit-explanations.mjs';
