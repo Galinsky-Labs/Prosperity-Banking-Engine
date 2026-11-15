@@ -37,3 +37,4 @@ export * from './chat/banker-chat.mjs';
 export * from './agent-scheduler.mjs';
 export * from './hardship.mjs';
 export * from './overdraft.mjs';
+export * from './step-up.mjs';
