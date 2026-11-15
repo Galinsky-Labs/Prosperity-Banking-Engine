@@ -41,3 +41,5 @@ export * from './step-up.mjs';
 export * from './disputes.mjs';
 export * from './studio/founders.mjs';
 export * from './studio/projects.mjs';
+export * from './studio/claims-ledger.mjs';
+export * from './studio/specialist-agents.mjs';
