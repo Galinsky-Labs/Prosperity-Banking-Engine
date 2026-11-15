@@ -60,3 +60,5 @@ export * from './fraud-aml.mjs';
 export * from './vendor-controls.mjs';
 export * from './regulatory-reporting.mjs';
 export * from './runtime/fault-injection.mjs';
+export * from './evals/banker-safety.mjs';
+export * from './evals/studio-leakage.mjs';

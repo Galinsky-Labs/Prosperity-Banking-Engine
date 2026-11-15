@@ -11,6 +11,7 @@ export const formatMinor=(currency,minor)=>`${currency} ${minor<0?'-':''}${Math.
 /** Requests the banker must never fulfil itself: money movement, ledger, credit, fee or account changes. */
 const ACTION_PATTERNS=[
  /\b(transfer|send|wire|pay|zelle|move)\b.*\b(money|funds|cash|\$|usd|dollars?|to)\b/i,
+ /^\s*(please\s+|can you\s+|could you\s+)?(pay|transfer|send|wire|move)\b/i,
  /\b(withdraw|deposit|refund|reverse|charge ?back|cancel (the )?payment)\b/i,
  /\b(approve|increase|raise|grant|lower)\b.*\b(loan|credit|limit|overdraft)\b/i,
  /\b(waive|remove|refund)\b.*\bfees?\b/i,
