@@ -4,7 +4,7 @@
   "roadmapVersion": 1,
   "planVerified": true,
   "plannedPrCount": 47,
-  "observedAt": "2026-11-15T19:13:51Z",
+  "observedAt": "2026-11-15T19:16:47Z",
   "units": [
     {
       "id": "BNK-001",
@@ -433,7 +433,9 @@
       "id": "BNK-031",
       "title": "Funding matching and referrals",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        29
+      ],
       "dependsOn": [
         "BNK-030"
       ],
@@ -445,7 +447,9 @@
       "id": "BNK-032",
       "title": "Allocation fairness and cost reporting",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        29
+      ],
       "dependsOn": [
         "BNK-031"
       ],
@@ -939,10 +943,22 @@
       "id": 5326184420,
       "number": 28,
       "title": "BNK-030: Add independent evidence verification",
-      "state": "open",
+      "state": "closed",
       "url": "https://github.com/Galinsky-Labs/Prosperity-Banking-Engine/pull/28",
       "createdAt": "2026-11-15T19:13:51Z",
-      "updatedAt": "2026-11-15T19:13:51Z",
+      "updatedAt": "2026-11-15T19:15:15Z",
+      "mergedAt": "2026-11-15T19:15:15Z",
+      "closedAt": "2026-11-15T19:15:15Z",
+      "draft": false
+    },
+    {
+      "id": 5326212414,
+      "number": 29,
+      "title": "BNK-031/BNK-032: Add funding matching, referrals, fair allocation and cost reporting",
+      "state": "open",
+      "url": "https://github.com/Galinsky-Labs/Prosperity-Banking-Engine/pull/29",
+      "createdAt": "2026-11-15T19:16:47Z",
+      "updatedAt": "2026-11-15T19:16:47Z",
       "mergedAt": null,
       "closedAt": null,
       "draft": false
