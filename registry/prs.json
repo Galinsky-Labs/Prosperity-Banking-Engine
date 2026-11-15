@@ -4,7 +4,7 @@
   "roadmapVersion": 1,
   "planVerified": true,
   "plannedPrCount": 47,
-  "observedAt": "2026-11-15T18:53:42Z",
+  "observedAt": "2026-11-15T18:56:31Z",
   "units": [
     {
       "id": "BNK-001",
@@ -279,7 +279,9 @@
       "id": "BNK-020",
       "title": "Disputes and human handoff",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        23
+      ],
       "dependsOn": [
         "BNK-019"
       ],
@@ -845,10 +847,22 @@
       "id": 5326003246,
       "number": 22,
       "title": "BNK-019: Add bound step-up approvals",
-      "state": "open",
+      "state": "closed",
       "url": "https://github.com/Galinsky-Labs/Prosperity-Banking-Engine/pull/22",
       "createdAt": "2026-11-15T18:53:42Z",
-      "updatedAt": "2026-11-15T18:53:42Z",
+      "updatedAt": "2026-11-15T18:55:07Z",
+      "mergedAt": "2026-11-15T18:55:06Z",
+      "closedAt": "2026-11-15T18:55:06Z",
+      "draft": false
+    },
+    {
+      "id": 5326027355,
+      "number": 23,
+      "title": "BNK-020: Add disputes and human handoff",
+      "state": "open",
+      "url": "https://github.com/Galinsky-Labs/Prosperity-Banking-Engine/pull/23",
+      "createdAt": "2026-11-15T18:56:31Z",
+      "updatedAt": "2026-11-15T18:56:31Z",
       "mergedAt": null,
       "closedAt": null,
       "draft": false
