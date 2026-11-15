@@ -4,7 +4,7 @@
   "roadmapVersion": 1,
   "planVerified": true,
   "plannedPrCount": 47,
-  "observedAt": "2026-11-15T19:37:15Z",
+  "observedAt": "2026-11-15T19:40:14Z",
   "units": [
     {
       "id": "BNK-001",
@@ -529,7 +529,9 @@
       "id": "BNK-036",
       "title": "Overdraft network certification",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        35
+      ],
       "dependsOn": [
         "BNK-035"
       ],
@@ -541,7 +543,9 @@
       "id": "BNK-037",
       "title": "Credit explanations",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        35
+      ],
       "dependsOn": [
         "BNK-036"
       ],
@@ -1045,10 +1049,22 @@
       "id": 5326398340,
       "number": 34,
       "title": "BNK-015..BNK-035: Expose module operations over HTTP with journaled persistence",
-      "state": "open",
+      "state": "closed",
       "url": "https://github.com/Galinsky-Labs/Prosperity-Banking-Engine/pull/34",
       "createdAt": "2026-11-15T19:37:15Z",
-      "updatedAt": "2026-11-15T19:37:15Z",
+      "updatedAt": "2026-11-15T19:39:11Z",
+      "mergedAt": "2026-11-15T19:39:11Z",
+      "closedAt": "2026-11-15T19:39:11Z",
+      "draft": false
+    },
+    {
+      "id": 5326424369,
+      "number": 35,
+      "title": "BNK-036/BNK-037: Add overdraft conformance evidence and credit explanations",
+      "state": "open",
+      "url": "https://github.com/Galinsky-Labs/Prosperity-Banking-Engine/pull/35",
+      "createdAt": "2026-11-15T19:40:14Z",
+      "updatedAt": "2026-11-15T19:40:14Z",
       "mergedAt": null,
       "closedAt": null,
       "draft": false
