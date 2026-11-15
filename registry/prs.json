@@ -4,7 +4,7 @@
   "roadmapVersion": 1,
   "planVerified": true,
   "plannedPrCount": 47,
-  "observedAt": "2026-11-15T18:59:24Z",
+  "observedAt": "2026-11-15T19:02:01Z",
   "units": [
     {
       "id": "BNK-001",
@@ -321,7 +321,9 @@
       "id": "BNK-023",
       "title": "Claims and evidence ledger",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        25
+      ],
       "dependsOn": [
         "BNK-022"
       ],
@@ -333,7 +335,9 @@
       "id": "BNK-024",
       "title": "Specialist agents and tools",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        25
+      ],
       "dependsOn": [
         "BNK-023"
       ],
@@ -875,10 +879,22 @@
       "id": 5326052793,
       "number": 24,
       "title": "BNK-021/BNK-022: Add founder onboarding, IP rights and project workspaces",
-      "state": "open",
+      "state": "closed",
       "url": "https://github.com/Galinsky-Labs/Prosperity-Banking-Engine/pull/24",
       "createdAt": "2026-11-15T18:59:24Z",
-      "updatedAt": "2026-11-15T18:59:24Z",
+      "updatedAt": "2026-11-15T19:00:18Z",
+      "mergedAt": "2026-11-15T19:00:18Z",
+      "closedAt": "2026-11-15T19:00:18Z",
+      "draft": false
+    },
+    {
+      "id": 5326074817,
+      "number": 25,
+      "title": "BNK-023/BNK-024: Add claims ledger and specialist agent tools",
+      "state": "open",
+      "url": "https://github.com/Galinsky-Labs/Prosperity-Banking-Engine/pull/25",
+      "createdAt": "2026-11-15T19:02:01Z",
+      "updatedAt": "2026-11-15T19:02:01Z",
       "mergedAt": null,
       "closedAt": null,
       "draft": false
