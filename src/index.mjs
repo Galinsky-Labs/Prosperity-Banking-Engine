@@ -38,3 +38,4 @@ export * from './agent-scheduler.mjs';
 export * from './hardship.mjs';
 export * from './overdraft.mjs';
 export * from './step-up.mjs';
+export * from './disputes.mjs';
