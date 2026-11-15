@@ -4,7 +4,7 @@
   "roadmapVersion": 1,
   "planVerified": true,
   "plannedPrCount": 47,
-  "observedAt": "2026-11-15T19:19:21Z",
+  "observedAt": "2026-11-15T19:22:09Z",
   "units": [
     {
       "id": "BNK-001",
@@ -477,7 +477,9 @@
       "id": "BNK-034",
       "title": "Deposits and reconciliation",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        31
+      ],
       "dependsOn": [
         "BNK-033"
       ],
@@ -489,7 +491,9 @@
       "id": "BNK-035",
       "title": "Payments lifecycle and returns",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        31
+      ],
       "dependsOn": [
         "BNK-034"
       ],
@@ -969,10 +973,22 @@
       "id": 5326239054,
       "number": 30,
       "title": "BNK-033: Add identity and screening partner adapter contract (sandbox only)",
-      "state": "open",
+      "state": "closed",
       "url": "https://github.com/Galinsky-Labs/Prosperity-Banking-Engine/pull/30",
       "createdAt": "2026-11-15T19:19:21Z",
-      "updatedAt": "2026-11-15T19:19:21Z",
+      "updatedAt": "2026-11-15T19:20:15Z",
+      "mergedAt": "2026-11-15T19:20:14Z",
+      "closedAt": "2026-11-15T19:20:14Z",
+      "draft": false
+    },
+    {
+      "id": 5326264216,
+      "number": 31,
+      "title": "BNK-034/BNK-035: Add reconciliation, deposit holds and sandbox payment lifecycle",
+      "state": "open",
+      "url": "https://github.com/Galinsky-Labs/Prosperity-Banking-Engine/pull/31",
+      "createdAt": "2026-11-15T19:22:09Z",
+      "updatedAt": "2026-11-15T19:22:09Z",
       "mergedAt": null,
       "closedAt": null,
       "draft": false
