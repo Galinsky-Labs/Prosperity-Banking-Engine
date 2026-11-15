@@ -43,3 +43,6 @@ export * from './studio/founders.mjs';
 export * from './studio/projects.mjs';
 export * from './studio/claims-ledger.mjs';
 export * from './studio/specialist-agents.mjs';
+export * from './studio/feasibility.mjs';
+export * from './studio/market-validation.mjs';
+export * from './studio/unit-economics.mjs';
