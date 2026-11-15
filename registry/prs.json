@@ -4,7 +4,7 @@
   "roadmapVersion": 1,
   "planVerified": true,
   "plannedPrCount": 47,
-  "observedAt": "2026-11-15T18:33:27Z",
+  "observedAt": "2026-11-15T18:37:50Z",
   "units": [
     {
       "id": "BNK-001",
@@ -93,7 +93,8 @@
       "title": "Event schemas, outbox and idempotency",
       "origin": "original",
       "prs": [
-        8
+        8,
+        17
       ],
       "dependsOn": [
         "BNK-006"
@@ -107,7 +108,8 @@
       "title": "Bank adapter contract and fake ledger",
       "origin": "original",
       "prs": [
-        9
+        9,
+        17
       ],
       "dependsOn": [
         "BNK-007"
@@ -121,7 +123,8 @@
       "title": "Tenant-isolated evidence vault",
       "origin": "original",
       "prs": [
-        11
+        11,
+        17
       ],
       "dependsOn": [
         "BNK-008"
@@ -758,10 +761,22 @@
       "id": 5325828853,
       "number": 16,
       "title": "BNK-010/BNK-011: Add synthetic engine HTTP API and health endpoint",
-      "state": "open",
+      "state": "closed",
       "url": "https://github.com/Galinsky-Labs/Prosperity-Banking-Engine/pull/16",
       "createdAt": "2026-11-15T18:33:27Z",
-      "updatedAt": "2026-11-15T18:33:27Z",
+      "updatedAt": "2026-11-15T18:34:37Z",
+      "mergedAt": "2026-11-15T18:34:37Z",
+      "closedAt": "2026-11-15T18:34:37Z",
+      "draft": false
+    },
+    {
+      "id": 5325866230,
+      "number": 17,
+      "title": "BNK-007/BNK-008/BNK-009: Add Postgres persistence with migrations",
+      "state": "open",
+      "url": "https://github.com/Galinsky-Labs/Prosperity-Banking-Engine/pull/17",
+      "createdAt": "2026-11-15T18:37:50Z",
+      "updatedAt": "2026-11-15T18:37:50Z",
       "mergedAt": null,
       "closedAt": null,
       "draft": false

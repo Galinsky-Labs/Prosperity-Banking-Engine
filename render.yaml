@@ -1,0 +1,23 @@
+# Non-production synthetic engine demo. Not a bank and not a bank-branded application.
+services:
+  - type: web
+    name: prosperity-banking-engine
+    runtime: node
+    plan: free
+    region: ohio
+    branch: main
+    autoDeploy: true
+    buildCommand: npm ci --omit=dev --ignore-scripts
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: DATA_MODE
+        value: synthetic
+      - key: NODE_VERSION
+        value: "22"
+      - key: DATABASE_URL # Neon pooled connection string (runtime)
+        sync: false
+      - key: MIGRATION_DATABASE_URL # Neon direct connection string (migrations at start)
+        sync: false
+      - key: ENGINE_SESSION_SECRET # signs synthetic demo sessions; generate with openssl rand -hex 32
+        sync: false

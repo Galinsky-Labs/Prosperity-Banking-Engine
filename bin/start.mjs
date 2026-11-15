@@ -7,8 +7,15 @@ import {MemoryEngineStore} from '../src/runtime/memory-store.mjs';
 const {version}=JSON.parse(readFileSync(new URL('../package.json',import.meta.url),'utf8'));
 const log=(level,message,extra={})=>console.log(JSON.stringify({level,message,...extra}));
 
+/** Memory store by default; Postgres when DATABASE_URL is set, after applying migrations at start. */
 export async function createStoreFromEnvironment(env=process.env){
- return new MemoryEngineStore();
+ if(!env.DATABASE_URL)return new MemoryEngineStore();
+ const [{default:pg},{migrate},{PostgresEngineStore}]=await Promise.all([import('pg'),import('../src/runtime/migrate.mjs'),import('../src/runtime/postgres-store.mjs')]);
+ const client=new pg.Client({connectionString:env.MIGRATION_DATABASE_URL||env.DATABASE_URL,connectionTimeoutMillis:15_000});
+ await client.connect();
+ try{const result=await migrate(client,{log:message=>log('info','migration',{detail:message})});log('info','Database migrations complete',{applied:result.applied.length,total:result.total});}
+ finally{await client.end();}
+ return new PostgresEngineStore({connectionString:env.DATABASE_URL,max:Number(env.DATABASE_POOL_MAX??5)});
 }
 
 export async function main(env=process.env){

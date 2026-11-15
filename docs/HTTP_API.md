@@ -34,7 +34,7 @@ Bodies must be `application/json` objects of at most 64 KiB. Responses are `no-s
 
 ## Storage
 
-Writes for the ledger, outbox and evidence vault go through store-backed durable services (`src/runtime/durable-services.mjs`). Each write re-runs the unchanged domain validation on a snapshot loaded from the store, then persists atomically. `MemoryEngineStore` is the process-local adapter used by tests and by default. Accounts are tenant-scoped synthetic fixtures shared by the tenant's synthetic subjects; per-customer account ownership is not modelled yet.
+Writes for the ledger, outbox and evidence vault go through store-backed durable services (`src/runtime/durable-services.mjs`); see [durable persistence](PERSISTENCE.md) for the Postgres adapter. Each write re-runs the unchanged domain validation on a snapshot loaded from the store, then persists atomically. `MemoryEngineStore` is the process-local adapter used by tests and when `DATABASE_URL` is unset. Accounts are tenant-scoped synthetic fixtures shared by the tenant's synthetic subjects; per-customer account ownership is not modelled yet.
 
 ## Not included
 
