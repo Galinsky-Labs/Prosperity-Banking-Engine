@@ -4,7 +4,7 @@
   "roadmapVersion": 1,
   "planVerified": true,
   "plannedPrCount": 47,
-  "observedAt": "2026-11-15T18:42:43Z",
+  "observedAt": "2026-11-15T18:45:18Z",
   "units": [
     {
       "id": "BNK-001",
@@ -209,7 +209,9 @@
       "id": "BNK-015",
       "title": "Agent scheduling and budgets",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        19
+      ],
       "dependsOn": [
         "BNK-014"
       ],
@@ -787,10 +789,22 @@
       "id": 5325908580,
       "number": 18,
       "title": "BNK-014: Add grounded banker chat with provider interface",
-      "state": "open",
+      "state": "closed",
       "url": "https://github.com/Galinsky-Labs/Prosperity-Banking-Engine/pull/18",
       "createdAt": "2026-11-15T18:42:43Z",
-      "updatedAt": "2026-11-15T18:42:43Z",
+      "updatedAt": "2026-11-15T18:43:36Z",
+      "mergedAt": "2026-11-15T18:43:36Z",
+      "closedAt": "2026-11-15T18:43:36Z",
+      "draft": false
+    },
+    {
+      "id": 5325932104,
+      "number": 19,
+      "title": "BNK-015: Add agent scheduling and budgets",
+      "state": "open",
+      "url": "https://github.com/Galinsky-Labs/Prosperity-Banking-Engine/pull/19",
+      "createdAt": "2026-11-15T18:45:18Z",
+      "updatedAt": "2026-11-15T18:45:18Z",
       "mergedAt": null,
       "closedAt": null,
       "draft": false
