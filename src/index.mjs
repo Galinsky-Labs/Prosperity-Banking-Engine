@@ -49,3 +49,5 @@ export * from './studio/unit-economics.mjs';
 export * from './studio/issue-spotting.mjs';
 export * from './studio/sprints.mjs';
 export * from './studio/verification.mjs';
+export * from './studio/funding.mjs';
+export * from './studio/fairness.mjs';
