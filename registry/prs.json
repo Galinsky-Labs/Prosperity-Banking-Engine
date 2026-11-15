@@ -4,7 +4,7 @@
   "roadmapVersion": 1,
   "planVerified": true,
   "plannedPrCount": 47,
-  "observedAt": "2026-11-04T20:16:40Z",
+  "observedAt": "2026-11-15T18:33:27Z",
   "units": [
     {
       "id": "BNK-001",
@@ -135,7 +135,8 @@
       "title": "Observability and audit sink",
       "origin": "original",
       "prs": [
-        12
+        12,
+        16
       ],
       "dependsOn": [
         "BNK-009"
@@ -149,7 +150,8 @@
       "title": "Banking home and balance freshness",
       "origin": "original",
       "prs": [
-        13
+        13,
+        16
       ],
       "dependsOn": [
         "BNK-010"
@@ -751,6 +753,18 @@
       "closedAt": "2026-11-04T20:16:34Z",
       "draft": false,
       "url": "https://github.com/neophilism/Prosperity-Banking-Engine/pull/15"
+    },
+    {
+      "id": 5325828853,
+      "number": 16,
+      "title": "BNK-010/BNK-011: Add synthetic engine HTTP API and health endpoint",
+      "state": "open",
+      "url": "https://github.com/Galinsky-Labs/Prosperity-Banking-Engine/pull/16",
+      "createdAt": "2026-11-15T18:33:27Z",
+      "updatedAt": "2026-11-15T18:33:27Z",
+      "mergedAt": null,
+      "closedAt": null,
+      "draft": false
     }
   ]
 }

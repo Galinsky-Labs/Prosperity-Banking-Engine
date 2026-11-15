@@ -9,3 +9,5 @@ Development takes place in reviewed pull requests. Do not develop any downstream
 See the foundation pull request for architecture, security controls, module contracts, tests, and the canonical `registry/prs.json` implementation roadmap.
 
 The [threat model and data classification](docs/THREAT_MODEL.md) defines protected assets, trust boundaries, fail-closed handling rules, and the controls that later roadmap units must implement before production use.
+
+The [synthetic engine HTTP API](docs/HTTP_API.md) exposes merged units over Node.js `node:http` for non-production demonstration only. It refuses to start unless `DATA_MODE=synthetic`.
